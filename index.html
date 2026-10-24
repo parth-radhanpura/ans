@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Answers</title>
+<style>
+  body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #f3f4f6; color: #111; }
+  #app { max-width: 900px; margin: 0 auto; padding: 12px; }
+  .box { margin-bottom: 20px; }
+  .bar { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center;
+         background: #111827; color: #fff; padding: 8px 10px; border-radius: 8px 8px 0 0; font-size: 14px; }
+  .bar button { background: #16a34a; color: #fff; border: 0; border-radius: 6px;
+                padding: 10px 22px; font-size: 16px; font-weight: bold; cursor: pointer; }
+  pre { margin: 0; background: #fff; border: 1px solid #d1d5db; border-top: 0; border-radius: 0 0 8px 8px;
+        padding: 12px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+  a.q { display: block; background: #fff; border: 1px solid #d1d5db; border-radius: 8px;
+        padding: 14px; margin: 8px 0; color: #111; text-decoration: none; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const ANSWERS = {
+
+1: [["Q1", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Table Attributes</title>
+</head>
+<body>
+  <h2 align="center">Demonstration of Table Attributes</h2>
+
+  <table border="2" cellpadding="10" cellspacing="4" width="70%" align="center" bgcolor="lightyellow">
+    <caption><b>Student Details</b></caption>
+    <tr bgcolor="lightblue">
+      <th width="15%">Roll No</th>
+      <th width="35%">Name</th>
+      <th>Course</th>
+      <th>Marks</th>
+    </tr>
+    <tr align="center">
+      <td>101</td>
+      <td align="left">Rahul Sharma</td>
+      <td>BCA</td>
+      <td>85</td>
+    </tr>
+    <tr align="center" bgcolor="lightgreen">
+      <td>102</td>
+      <td align="left">Priya Verma</td>
+      <td>BCA</td>
+      <td>92</td>
+    </tr>
+    <tr align="center" height="60">
+      <td valign="top">103</td>
+      <td align="left" valign="middle">Amit Kumar</td>
+      <td valign="bottom">BCA</td>
+      <td bgcolor="pink">78</td>
+    </tr>
+  </table>
+</body>
+</html>
+`]],
+
+2: [["Q2", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rowspan and Colspan</title>
+</head>
+<body>
+  <h2>Demonstration of Rowspan and Colspan</h2>
+
+  <table border="1" cellpadding="10" cellspacing="0">
+    <tr>
+      <th rowspan="2">Section</th>
+      <th rowspan="2">Name</th>
+      <th colspan="3">Marks</th>
+      <th rowspan="2">Total</th>
+    </tr>
+    <tr>
+      <th>HTML</th>
+      <th>CSS</th>
+      <th>JavaScript</th>
+    </tr>
+    <tr align="center">
+      <td rowspan="2">A</td>
+      <td>Rahul</td>
+      <td>80</td>
+      <td>75</td>
+      <td>90</td>
+      <td>245</td>
+    </tr>
+    <tr align="center">
+      <td>Priya</td>
+      <td>85</td>
+      <td>88</td>
+      <td>92</td>
+      <td>265</td>
+    </tr>
+    <tr align="center">
+      <td rowspan="2">B</td>
+      <td>Amit</td>
+      <td>70</td>
+      <td>82</td>
+      <td>76</td>
+      <td>228</td>
+    </tr>
+    <tr align="center">
+      <td>Neha</td>
+      <td>91</td>
+      <td>87</td>
+      <td>95</td>
+      <td>273</td>
+    </tr>
+    <tr>
+      <td colspan="5" align="right"><b>Grand Total</b></td>
+      <td align="center"><b>1011</b></td>
+    </tr>
+  </table>
+</body>
+</html>
+`]],
+
+3: [["Q3", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Additional Input Types</title>
+</head>
+<body>
+  <h2>HTML5 Additional Input Types</h2>
+
+  <form oninput="rangeValue.value = volume.value">
+    <table cellpadding="8">
+      <tr>
+        <td>Color</td>
+        <td><input type="color" name="favcolor" value="#ff6600"></td>
+      </tr>
+      <tr>
+        <td>Date</td>
+        <td><input type="date" name="dob"></td>
+      </tr>
+      <tr>
+        <td>Date and Time</td>
+        <td><input type="datetime-local" name="meeting"></td>
+      </tr>
+      <tr>
+        <td>Month</td>
+        <td><input type="month" name="month"></td>
+      </tr>
+      <tr>
+        <td>Week</td>
+        <td><input type="week" name="week"></td>
+      </tr>
+      <tr>
+        <td>Time</td>
+        <td><input type="time" name="time"></td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td><input type="email" name="email" placeholder="name@gmail.com"></td>
+      </tr>
+      <tr>
+        <td>URL</td>
+        <td><input type="url" name="website" placeholder="https://www.example.com"></td>
+      </tr>
+      <tr>
+        <td>Telephone</td>
+        <td><input type="tel" name="phone" pattern="[0-9]{10}" placeholder="10 digit number"></td>
+      </tr>
+      <tr>
+        <td>Number</td>
+        <td><input type="number" name="age" min="1" max="100" step="1" placeholder="1 to 100"></td>
+      </tr>
+      <tr>
+        <td>Range</td>
+        <td><input type="range" name="volume" min="0" max="100" value="50"> <output name="rangeValue">50</output></td>
+      </tr>
+      <tr>
+        <td>Search</td>
+        <td><input type="search" name="search" placeholder="Search..."></td>
+      </tr>
+      <tr>
+        <td>Datalist</td>
+        <td>
+          <input type="text" name="browser" list="browsers" placeholder="Choose a browser">
+          <datalist id="browsers">
+            <option value="Chrome">
+            <option value="Firefox">
+            <option value="Edge">
+            <option value="Safari">
+          </datalist>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><input type="submit" value="Submit"> <input type="reset" value="Reset"></td>
+      </tr>
+    </table>
+  </form>
+</body>
+</html>
+`]],
+
+4: [["Q4", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multimedia Tags</title>
+</head>
+<body>
+  <h1>HTML Multimedia Tags</h1>
+
+  <h2>1. Audio Tag</h2>
+  <audio controls loop>
+    <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+    <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg">
+    Your browser does not support the audio tag.
+  </audio>
+
+  <h2>2. Video Tag</h2>
+  <video width="400" height="250" controls autoplay muted loop>
+    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    <source src="https://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+    Your browser does not support the video tag.
+  </video>
+
+  <h2>3. Embed Tag</h2>
+  <embed src="https://www.w3schools.com/html/pic_trulli.jpg" type="image/jpeg" width="400" height="266">
+</body>
+</html>
+`]],
+
+5: [["Q5", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Change Background Color</title>
+  <script>
+    function changeColor(color) {
+      document.body.style.backgroundColor = color;
+    }
+  <\/script>
+</head>
+<body>
+  <h2>Select a radio button to change the background color</h2>
+
+  <form>
+    <input type="radio" name="bg" id="red" value="red" onclick="changeColor(this.value)">
+    <label for="red">Red</label><br>
+
+    <input type="radio" name="bg" id="green" value="lightgreen" onclick="changeColor(this.value)">
+    <label for="green">Green</label><br>
+
+    <input type="radio" name="bg" id="blue" value="skyblue" onclick="changeColor(this.value)">
+    <label for="blue">Blue</label><br>
+
+    <input type="radio" name="bg" id="yellow" value="yellow" onclick="changeColor(this.value)">
+    <label for="yellow">Yellow</label><br>
+
+    <input type="radio" name="bg" id="pink" value="pink" onclick="changeColor(this.value)">
+    <label for="pink">Pink</label><br>
+
+    <input type="radio" name="bg" id="white" value="white" onclick="changeColor(this.value)" checked>
+    <label for="white">White</label>
+  </form>
+</body>
+</html>
+`]],
+
+6: [["Q6", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Change Button Caption</title>
+  <script>
+    function buttonPressed(btn) {
+      btn.value = "Button Clicked";
+    }
+    function buttonReleased(btn) {
+      btn.value = "Button Released";
+    }
+  <\/script>
+</head>
+<body>
+  <h2>Change the caption of a button when it is clicked and released</h2>
+
+  <input type="button" value="Click Me" style="padding: 10px 20px; font-size: 18px;"
+         onmousedown="buttonPressed(this)" onmouseup="buttonReleased(this)">
+</body>
+</html>
+`]],
+
+7: [["Q7", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>getElementById Demo</title>
+  <script>
+    function showMessage() {
+      var name = document.getElementById("username").value;
+      document.getElementById("output").innerHTML = "Welcome, " + name + "!";
+    }
+
+    function changeHeading() {
+      var heading = document.getElementById("heading");
+      heading.innerHTML = "Heading changed using getElementById()";
+      heading.style.color = "white";
+      heading.style.backgroundColor = "green";
+    }
+  <\/script>
+</head>
+<body>
+  <h2 id="heading">Demonstration of getElementById()</h2>
+
+  Enter your name: <input type="text" id="username">
+  <input type="button" value="Show Message" onclick="showMessage()">
+  <p id="output"></p>
+
+  <input type="button" value="Change Heading" onclick="changeHeading()">
+</body>
+</html>
+`]],
+
+8: [["Q8", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registration Form</title>
+</head>
+<body>
+  <h2 align="center">Student Registration Form</h2>
+
+  <form action="#" method="post" onsubmit="alert('Registration Successful!'); return false;">
+    <fieldset style="max-width: 600px; margin: auto;">
+      <legend>Fill in your details (* = required)</legend>
+      <table cellpadding="8">
+        <tr>
+          <td><label for="fname">First Name *</label></td>
+          <td><input type="text" id="fname" name="fname" placeholder="Enter first name" maxlength="30" required autofocus></td>
+        </tr>
+        <tr>
+          <td><label for="lname">Last Name</label></td>
+          <td><input type="text" id="lname" name="lname" placeholder="Enter last name" maxlength="30"></td>
+        </tr>
+        <tr>
+          <td>Gender *</td>
+          <td>
+            <input type="radio" id="male" name="gender" value="Male" required> <label for="male">Male</label>
+            <input type="radio" id="female" name="gender" value="Female"> <label for="female">Female</label>
+            <input type="radio" id="other" name="gender" value="Other"> <label for="other">Other</label>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="dob">Date of Birth *</label></td>
+          <td><input type="date" id="dob" name="dob" required></td>
+        </tr>
+        <tr>
+          <td><label for="email">Email *</label></td>
+          <td><input type="email" id="email" name="email" placeholder="example@gmail.com" required></td>
+        </tr>
+        <tr>
+          <td><label for="phone">Mobile No. *</label></td>
+          <td><input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="10 digit number" required></td>
+        </tr>
+        <tr>
+          <td><label for="pass">Password *</label></td>
+          <td><input type="password" id="pass" name="password" minlength="6" placeholder="Minimum 6 characters" required></td>
+        </tr>
+        <tr>
+          <td><label for="course">Course *</label></td>
+          <td>
+            <select id="course" name="course" required>
+              <option value="">-- Select Course --</option>
+              <option value="BCA">BCA</option>
+              <option value="BSc">B.Sc (Computer Science)</option>
+              <option value="BTech">B.Tech</option>
+              <option value="MCA">MCA</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="marks">12th Percentage</label></td>
+          <td><input type="number" id="marks" name="marks" min="33" max="100" step="0.01" placeholder="e.g. 85.5"></td>
+        </tr>
+        <tr>
+          <td><label for="lang">Languages Known</label><br><small>(Hold Ctrl to select more)</small></td>
+          <td>
+            <select id="lang" name="languages" multiple size="4">
+              <option value="Hindi">Hindi</option>
+              <option value="English">English</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="Other">Other</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Hobbies</td>
+          <td>
+            <input type="checkbox" id="h1" name="hobby" value="Reading"> <label for="h1">Reading</label>
+            <input type="checkbox" id="h2" name="hobby" value="Sports"> <label for="h2">Sports</label>
+            <input type="checkbox" id="h3" name="hobby" value="Music"> <label for="h3">Music</label>
+            <input type="checkbox" id="h4" name="hobby" value="Coding"> <label for="h4">Coding</label>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="address">Address</label></td>
+          <td><textarea id="address" name="address" rows="4" cols="35" placeholder="Enter your full address"></textarea></td>
+        </tr>
+        <tr>
+          <td><label for="website">Website / LinkedIn</label></td>
+          <td><input type="url" id="website" name="website" placeholder="https://"></td>
+        </tr>
+        <tr>
+          <td><label for="photo">Upload Photo</label></td>
+          <td><input type="file" id="photo" name="photo" accept="image/*"></td>
+        </tr>
+        <tr>
+          <td><label for="skill">Coding Skill (1 to 10)</label></td>
+          <td><input type="range" id="skill" name="skill" min="1" max="10" value="5"></td>
+        </tr>
+        <tr>
+          <td><label for="color">Favourite Colour</label></td>
+          <td><input type="color" id="color" name="color" value="#0066ff"></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <input type="checkbox" id="agree" name="agree" required>
+            <label for="agree">I agree to the terms and conditions *</label>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">
+            <input type="hidden" name="formid" value="REG2026">
+            <input type="submit" value="Register">
+            <input type="reset" value="Reset">
+            <input type="button" value="Help" onclick="alert('Fields marked * are compulsory.')">
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+  </form>
+</body>
+</html>
+`]],
+
+9: [["Q9 - HTML file", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Types of Style Sheets</title>
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <style>
+    h2 {
+      color: darkgreen;
+      font-family: Arial, sans-serif;
+    }
+    .internal {
+      background-color: lightyellow;
+      border: 2px dashed green;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Three Types of Style Sheets</h1>
+
+  <h2>1. Inline Style Sheet</h2>
+  <p style="color: red; font-size: 20px; font-weight: bold;">
+    This paragraph uses INLINE CSS (style attribute inside the tag).
+  </p>
+
+  <h2>2. Internal Style Sheet</h2>
+  <p class="internal">
+    This paragraph uses INTERNAL CSS (style tag inside the head section).
+  </p>
+
+  <h2>3. External Style Sheet</h2>
+  <p class="external">
+    This paragraph uses EXTERNAL CSS (linked style.css file).
+  </p>
+</body>
+</html>
+`], ["Q9 - style.css (same folder)", `
+body {
+  background-color: aliceblue;
+  font-family: Verdana, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  color: navy;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.external {
+  color: white;
+  background-color: purple;
+  padding: 10px;
+  border-radius: 8px;
+}
+`]],
+
+10: [["Q10", `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Map</title>
+</head>
+<body>
+  <h2>Image Map Demonstration</h2>
+  <p>Click on the Rectangle, Circle or Triangle. Each area opens a different website.</p>
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='240'><rect width='500' height='240' fill='lightyellow'/><rect x='30' y='40' width='130' height='130' fill='tomato'/><circle cx='250' cy='105' r='65' fill='dodgerblue'/><polygon points='400,40 465,170 335,170' fill='seagreen'/><g font-family='Arial' font-size='18' text-anchor='middle'><text x='95' y='210'>Rectangle</text><text x='250' y='210'>Circle</text><text x='400' y='210'>Triangle</text></g></svg>"
+       width="500" height="240" alt="Shapes" usemap="#shapesmap">
+
+  <map name="shapesmap">
+    <area shape="rect" coords="30,40,160,170" href="https://www.google.com" target="_blank" alt="Google" title="Rectangle - Google">
+    <area shape="circle" coords="250,105,65" href="https://www.wikipedia.org" target="_blank" alt="Wikipedia" title="Circle - Wikipedia">
+    <area shape="poly" coords="400,40,465,170,335,170" href="https://www.youtube.com" target="_blank" alt="YouTube" title="Triangle - YouTube">
+  </map>
+</body>
+</html>
+`]]
+};
+
+const TITLES = {
+  1: "Table attributes (table, tr, th, td)",
+  2: "Rowspan and Colspan",
+  3: "Additional input types",
+  4: "Multimedia tags (audio, video, embed)",
+  5: "Change background color using radio buttons",
+  6: "Change button caption on click and release",
+  7: "getElementById() demo",
+  8: "Registration form with all controls",
+  9: "Inline, internal and external CSS",
+  10: "Image map attributes"
+};
+
+const app = document.getElementById("app");
+const num = parseInt((location.search.match(/\d+/) || [])[0], 10);
+
+if (ANSWERS[num]) {
+  document.title = "Q" + num;
+  ANSWERS[num].forEach(function (item) {
+    const code = item[1].trim();
+    const box = document.createElement("div");
+    box.className = "box";
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    const label = document.createElement("span");
+    label.textContent = item[0];
+    const btn = document.createElement("button");
+    btn.textContent = "Copy";
+    btn.onclick = function () { copyText(code, btn); };
+    const pre = document.createElement("pre");
+    pre.textContent = code;
+    bar.append(label, btn);
+    box.append(bar, pre);
+    app.append(box);
+  });
+} else {
+  const h = document.createElement("h3");
+  h.textContent = "Add ?1 to ?10 at the end of the link, or tap a question:";
+  app.append(h);
+  Object.keys(TITLES).forEach(function (k) {
+    const a = document.createElement("a");
+    a.className = "q";
+    a.href = "?" + k;
+    a.textContent = k + ". " + TITLES[k];
+    app.append(a);
+  });
+}
+
+function copyText(text, btn) {
+  function done() {
+    btn.textContent = "Copied!";
+    setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, function () { oldCopy(text); done(); });
+  } else {
+    oldCopy(text);
+    done();
+  }
+}
+
+function oldCopy(text) {
+  const t = document.createElement("textarea");
+  t.value = text;
+  t.setAttribute("readonly", "");
+  t.style.position = "fixed";
+  t.style.opacity = "0";
+  document.body.appendChild(t);
+  t.select();
+  t.setSelectionRange(0, text.length);
+  document.execCommand("copy");
+  document.body.removeChild(t);
+}
+</script>
+</body>
+</html>
