@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operational Maths Practicals</title>
+<meta name="description" content="Scilab code for the Operational Mathematics practicals. Type a practical number like 1a to get its code.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23ffffff'/%3E%3Cpath d='M0 9h32M0 16h32M0 23h32' stroke='%23c9d5e4' stroke-width='1.5'/%3E%3Cpath d='M8 0v32' stroke='%23e59aa3' stroke-width='2'/%3E%3Cpath d='M12 20l4 5 9-14' fill='none' stroke='%231e3a8a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  --desk: #ECF0F5;
+  --paper: #FFFFFF;
+  --rule: #DFE7F1;
+  --rule-strong: #C8D4E3;
+  --margin: #E8A1AA;
+  --ink: #1E3A8A;
+  --ink-soft: #3B5BB5;
+  --text: #18202C;
+  --muted: #5B6677;
+  --redpen: #C2272D;
+  --focus: #2563EB;
+  --kw: #0E1D57;
+  --cm: #6C7686;
+  --st: #17643A;
+  --cn: #6B2BC9;
+  --btn-hover: #F1F5FB;
+  --lh: 24px;
+  --gutter: 52px;
+  --mono: ui-monospace, "Cascadia Mono", "Cascadia Code", Consolas, "SF Mono", Menlo, "Liberation Mono", "DejaVu Sans Mono", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --desk: #0D1421;
+    --paper: #141D2C;
+    --rule: #1E2A3E;
+    --rule-strong: #2A3954;
+    --margin: #7A3440;
+    --ink: #A9C2FF;
+    --ink-soft: #8AA8F5;
+    --text: #E4E9F2;
+    --muted: #93A0B5;
+    --redpen: #FF7A7A;
+    --focus: #7DA2FF;
+    --kw: #E0E8FF;
+    --cm: #8592A8;
+    --st: #8EE0A8;
+    --cn: #C9B4FF;
+    --btn-hover: #1B2638;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+@media (pointer: coarse) { .kbd-only { display: none; } }
+body {
+  margin: 0;
+  background: var(--desk);
+  color: var(--text);
+  font: 16px/1.5 var(--sans);
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 28px 16px 72px; }
+
+/* ---------- lookup ---------- */
+.site { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
+.site small { display: block; font-size: 14px; font-weight: 400; color: var(--muted); }
+.lookup { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin: 26px 0 6px; }
+.lookup label { font-size: 22px; color: var(--ink); white-space: nowrap; }
+.lookup input {
+  width: 5.2ch; min-width: 0;
+  font: 600 44px/1.15 var(--sans);
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--rule-strong);
+  border-radius: 0;
+  padding: 0 2px 2px;
+  text-transform: uppercase;
+}
+.lookup input::placeholder { color: var(--rule-strong); }
+.lookup input:focus { outline: none; border-bottom-color: var(--ink); }
+.lookup input:focus-visible { outline: none; }
+.hint { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+kbd { font: 600 13px var(--mono); color: var(--ink); background: var(--paper); border: 1px solid var(--rule-strong); border-radius: 4px; padding: 0 5px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; padding: 0; list-style: none; }
+.chips a {
+  display: inline-block; min-width: 40px; text-align: center;
+  font: 600 14px/1 var(--sans); color: var(--ink); text-decoration: none;
+  padding: 8px 9px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--paper);
+}
+.chips a:hover { background: var(--btn-hover); }
+.chips a[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+/* ---------- contents (journal index) ---------- */
+.msg { margin: 26px 0 10px; color: var(--muted); font-size: 15px; }
+.index { margin: 0; padding: 0; list-style: none; background: var(--paper); border: 1px solid var(--rule-strong); border-radius: 4px; overflow: hidden; }
+.index a {
+  display: grid; grid-template-columns: var(--gutter) 1fr auto; align-items: baseline;
+  text-decoration: none; color: var(--text); min-height: 48px; padding: 12px 16px 11px 0;
+  border-bottom: 1px solid var(--rule);
+  background: linear-gradient(to right, transparent calc(var(--gutter) - 1px), var(--margin) calc(var(--gutter) - 1px), var(--margin) calc(var(--gutter) + 1px), transparent calc(var(--gutter) + 1px));
+}
+.index li:last-child a { border-bottom: 0; }
+.index a:hover { background-color: var(--btn-hover); }
+.index .no { font-weight: 700; color: var(--ink); text-align: right; padding-right: 14px; }
+.index .t { padding-left: 16px; }
+.index .pg { padding-left: 12px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+
+/* ---------- practical ---------- */
+.prac-head { margin: 30px 0 14px; }
+.prac-head h1 { margin: 0; font-size: 26px; line-height: 1.25; font-weight: 600; letter-spacing: -0.01em; }
+.prac-head h1 .id { color: var(--ink); margin-right: 10px; }
+.prac-head .aim { margin: 6px 0 0; color: var(--text); }
+.prac-head .meta { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 16px 0 0; padding: 0; list-style: none; }
+.toc a { display: inline-flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; font-size: 14px; padding: 4px 0; }
+.toc a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.toc .part-no { min-width: 20px; height: 20px; font-size: 12px; }
+.part { scroll-margin-top: 12px; }
+
+.btn {
+  font: 500 14px/1 var(--sans); color: var(--ink);
+  background: var(--paper); border: 1px solid var(--rule-strong); border-radius: 6px;
+  padding: 9px 13px; cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: var(--btn-hover); }
+.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.btn.primary:hover { filter: brightness(1.12); }
+.btn.copied, .btn.primary.copied { color: var(--redpen); border-color: var(--redpen); background: var(--paper); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.sheet {
+  background-color: var(--paper);
+  background-image: linear-gradient(to right, transparent calc(var(--gutter) - 1px), var(--margin) calc(var(--gutter) - 1px), var(--margin) calc(var(--gutter) + 1px), transparent calc(var(--gutter) + 1px));
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.part { padding-bottom: 14px; }
+.part + .part { border-top: 1px solid var(--rule-strong); }
+.part-head {
+  display: grid; grid-template-columns: var(--gutter) minmax(0, 1fr) auto; align-items: center;
+  padding: 14px 14px 10px 0;
+}
+.part-no {
+  justify-self: center;
+  display: grid; place-items: center; min-width: 24px; height: 24px; padding: 0 4px;
+  border: 1.5px solid var(--ink); color: var(--ink); border-radius: 2px;
+  font: 600 13px/1 var(--sans);
+  background: var(--paper);
+}
+.part-head h2 { margin: 0; padding-left: 16px; font-size: 17px; line-height: 1.3; font-weight: 600; }
+.part-head h2 .pg { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 8px; white-space: nowrap; }
+.part-head .btn { margin-left: 10px; }
+
+.code-wrap {
+  display: grid; grid-template-columns: var(--gutter) minmax(0, 1fr);
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--lh) - 1px), var(--rule) calc(var(--lh) - 1px), var(--rule) var(--lh));
+}
+.gutter {
+  margin: 0; padding: 0 12px 0 0; text-align: right;
+  font: 12px/var(--lh) var(--mono); color: var(--muted);
+  white-space: pre; user-select: none; -webkit-user-select: none;
+}
+pre.code {
+  margin: 0; padding: 0 18px 0 16px; overflow-x: auto;
+  font: 14px/var(--lh) var(--mono); color: var(--ink); tab-size: 4;
+}
+pre.code code { font: inherit; }
+pre.text {
+  margin: 0; padding: 0 18px 0 16px; white-space: pre-wrap; overflow-wrap: anywhere;
+  font: 15px/var(--lh) var(--sans); color: var(--ink);
+}
+.code-wrap.textual { grid-template-columns: var(--gutter) minmax(0, 1fr); }
+.kw { color: var(--kw); font-weight: 600; }
+.cm { color: var(--cm); font-style: italic; }
+.st { color: var(--st); }
+.cn { color: var(--cn); }
+
+.fix { margin: 12px 18px 0 calc(var(--gutter) + 16px); font-size: 13.5px; line-height: 1.5; color: var(--redpen); }
+.fix ul { margin: 2px 0 0; padding-left: 18px; }
+.fix code { font: 12.5px var(--mono); }
+
+.pnote { margin: 10px 18px 0 calc(var(--gutter) + 16px); font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+.pnote code { font: 12.5px var(--mono); color: var(--text); overflow-wrap: anywhere; }
+.note { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+
+footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 600px) {
+  :root { --gutter: 40px; }
+  .wrap { padding-top: 20px; }
+  .lookup label { font-size: 19px; }
+  .lookup input { font-size: 36px; }
+  .prac-head h1 { font-size: 22px; }
+  pre.code { font-size: 13px; padding-right: 14px; }
+  .gutter { font-size: 11px; padding-right: 8px; }
+  .part-head { grid-template-columns: var(--gutter) minmax(0, 1fr); row-gap: 8px; }
+  .part-head .btn { grid-column: 2; justify-self: start; margin-left: 16px; }
+  .index a { grid-template-columns: var(--gutter) 1fr; }
+  .index .pg { grid-column: 2; padding-left: 16px; }
+  .fix { margin-right: 14px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: background-color .12s ease, color .12s ease, border-color .12s ease; }
+}
+@media print {
+  body { background: #fff; }
+  .lookup, .hint, .chips, .actions, .part-head .btn, footer { display: none; }
+  .sheet { border: 0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="site">Operational Mathematics practicals<small>Scilab code from the S.Y. B.Sc. IT journal</small></p>
+    <form class="lookup" role="search" id="lookup">
+      <label for="pno">Practical No.</label>
+      <input id="pno" name="pno" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="1a" enterkeyhint="go" aria-describedby="hint">
+    </form>
+    <p class="hint" id="hint">Type a number like <kbd>1a</kbd> or <kbd>4b</kbd>, or a word from the title.<span class="kbd-only"> Press <kbd>/</kbd> to come back here.</span></p>
+  </header>
+  <nav aria-label="All practicals"><ul class="chips" id="chips" hidden></ul></nav>
+  <main id="view" tabindex="-1"></main>
+  <p id="status" class="sr-only" aria-live="polite"></p>
+  <footer>Typed from the handwritten journal and run in Scilab 2024.0. Corrections to the journal are listed in red under each part.</footer>
+</div>
+
+<script type="application/json" id="practicals-data">[{"id":"1a","title":"Complex Numbers: Addition, Subtraction, Multiplication and Division","aim":"","pages":[1,9],"parts":[{"heading":"Addition","kind":"code","pages":[2,3],"body":"// Addition\na1 = 1;\nb1 = 2;\na2 = 3;\nb2 = 1;\nz1 = complex(a1,b1);\nz2 = complex(a2,b2);\nz3 = z1 + z2;\na3 = real(z3);\nb3 = imag(z3);\n// plot\nfigure(0);\nclf();\nhf = gcf();\nhf.background = -2;\nha = gca();\nha.data_bounds = [-5,-5;5,5];\nxgrid();\nplot([0 a1],[0 b1],'b','LineWidth',3);\nplot([0 a2],[0 b2],'r','LineWidth',3);\nplot([0 a3],[0 b3],'g','LineWidth',3);\nxlabel('Real Axis (Re)','FontSize',2);\nylabel('Imaginary Axis (Im)','FontSize',2);\nlegend('$\\Large{z_{1}}$','$\\Large{z_{2}}$','$\\Large{z_{3}}$');\nplot(0,0,'sk');\nplot(a1,b1,'sk');\nplot(a2,b2,'sk');\nplot(a3,b3,'sk');\n// Calculate polar form.\nr1 = sqrt(a1^2 + b1^2);\nr2 = sqrt(a2^2 + b2^2);\nr3 = sqrt(a3^2 + b3^2);\nphi1 = atan(b1/a1)*180/%pi;\nphi2 = atan(b2/a2)*180/%pi;\nphi3 = atan(b3/a3)*180/%pi;\n// Display\nmprintf('%s\\t %s\\t %s\\t %s\\t\\n','a','b','r','phi');\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a1,b1,r1,phi1);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a2,b2,r2,phi2);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a3,b3,r3,phi3);","changes":["`Complex(...)` → `complex(...)`: Scilab is case-sensitive.","`b2 = imag(z3);` → `b3 = imag(z3);` (b3 is used in the plot and the table).","Plot lines: `'LineWidth',,3` and `'LineWidth,3` → `'LineWidth',3`.","`%4.2` → `%4.2f` in the mprintf lines (the f was missing)."],"note":""},{"heading":"Subtraction","kind":"code","pages":[4,5],"body":"// Subtraction\na1 = 1;\nb1 = 2;\na2 = 3;\nb2 = 1;\nz1 = complex(a1,b1);\nz2 = complex(a2,b2);\nz3 = z1 - z2;\na3 = real(z3);\nb3 = imag(z3);\n// plot\nfigure(0);\nclf();\nhf = gcf();\nhf.background = -2;\nha = gca();\nha.data_bounds = [-5,-5;5,5];\nxgrid();\nplot([0 a1],[0 b1],'b','LineWidth',3);\nplot([0 a2],[0 b2],'r','LineWidth',3);\nplot([0 a3],[0 b3],'g','LineWidth',3);\nxlabel('Real Axis (Re)','FontSize',2);\nylabel('Imaginary Axis (Im)','FontSize',2);\nlegend('$\\Large{z_{1}}$','$\\Large{z_{2}}$','$\\Large{z_{3}}$');\nplot(0,0,'sk');\nplot(a1,b1,'sk');\nplot(a2,b2,'sk');\nplot(a3,b3,'sk');\n// Calculate polar form\nr1 = sqrt(a1^2 + b1^2);\nr2 = sqrt(a2^2 + b2^2);\nr3 = sqrt(a3^2 + b3^2);\nphi1 = atan(b1/a1)*180/%pi;\nphi2 = atan(b2/a2)*180/%pi;\nphi3 = atan(b3/a3)*180/%pi;\n// Display\nmprintf('%s\\t %s\\t %s\\t %s\\t\\n','a','b','r','phi');\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a1,b1,r1,phi1);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a2,b2,r2,phi2);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a3,b3,r3,phi3);","changes":["`Complex(...)` → `complex(...)`.","`b2 = imag(z3);` → `b3 = imag(z3);`.","Plot lines: `3];` → `3);` and `'g',,'LineWidth'` → `'g','LineWidth'`.","`%4.2` → `%4.2f` in the mprintf lines."],"note":""},{"heading":"Multiplication","kind":"code","pages":[6,7],"body":"// Multiplication\na1 = 1;\nb1 = 2;\na2 = 3;\nb2 = 1;\nz1 = complex(a1,b1);\nz2 = complex(a2,b2);\nz3 = z1 * z2;\na3 = real(z3);\nb3 = imag(z3);\n//plot\nfigure(0);\nclf();\nhf = gcf();\nhf.background = -2;\nha = gca();\nha.data_bounds = [-5,-5;5,5];\nxgrid();\nplot([0 a1],[0 b1],'b','LineWidth',3);\nplot([0 a2],[0 b2],'r','LineWidth',3);\nplot([0 a3],[0 b3],'g','LineWidth',3);\nxlabel('Real Axis (Re)','FontSize',2);\nylabel('Imaginary Axis (Im)','FontSize',2);\nlegend('$\\Large{z_{1}}$','$\\Large{z_{2}}$','$\\Large{z_{3}}$');\nplot(0,0,'sk');\nplot(a1,b1,'sk');\nplot(a2,b2,'sk');\nplot(a3,b3,'sk');\n// Calculate polar form\nr1 = sqrt(a1^2 + b1^2);\nr2 = sqrt(a2^2 + b2^2);\nr3 = sqrt(a3^2 + b3^2);\nphi1 = atan(b1/a1)*180/%pi;\nphi2 = atan(b2/a2)*180/%pi;\nphi3 = atan(b3/a3)*180/%pi;\n// Display\nmprintf('%s\\t %s\\t %s\\t %s\\t\\n','a','b','r','phi');\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a1,b1,r1,phi1);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a2,b2,r2,phi2);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a3,b3,r3,phi3);","changes":["`b2 = imag(z3);` → `b3 = imag(z3);`.","Plot lines: `3];` → `3);`, a missing comma before `3`, and `LineWith` → `LineWidth`.","`%4.2` → `%4.2f` in the mprintf lines."],"note":""},{"heading":"Division","kind":"code","pages":[8,9],"body":"// Division\na1 = 1;\nb1 = 2;\na2 = 3;\nb2 = 1;\nz1 = complex(a1,b1);\nz2 = complex(a2,b2);\nz3 = z1 / z2;\na3 = real(z3);\nb3 = imag(z3);\n//plot\nfigure(0);\nclf();\nhf = gcf();\nhf.background = -2;\nha = gca();\nha.data_bounds = [-5,-5;5,5];\nxgrid();\nplot([0 a1],[0 b1],'b','LineWidth',3);\nplot([0 a2],[0 b2],'r','LineWidth',3);\nplot([0 a3],[0 b3],'g','LineWidth',3);\nxlabel('Real Axis (Re)','FontSize',2);\nylabel('Imaginary Axis (Im)','FontSize',2);\nlegend('$\\Large{z_{1}}$','$\\Large{z_{2}}$','$\\Large{z_{3}}$');\nplot(0,0,'sk');\nplot(a1,b1,'sk');\nplot(a2,b2,'sk');\nplot(a3,b3,'sk');\n//Calculate polar form\nr1 = sqrt(a1^2 + b1^2);\nr2 = sqrt(a2^2 + b2^2);\nr3 = sqrt(a3^2 + b3^2);\nphi1 = atan(b1/a1)*180/%pi;\nphi2 = atan(b2/a2)*180/%pi;\nphi3 = atan(b3/a3)*180/%pi;\n// Display\nmprintf('%s\\t %s\\t %s\\t %s\\t\\n','a','b','r','phi');\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a1,b1,r1,phi1);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a2,b2,r2,phi2);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\t\\n',a3,b3,r3,phi3);","changes":["`Complex(...)` → `complex(...)`.","`b2 = imag(z3);` → `b3 = imag(z3);`.","`%4.2` → `%4.2f` in the mprintf lines."],"note":""}],"note":""},{"id":"1b","title":"Complex Numbers: De Moivre's Theorem","aim":"","pages":[10,13],"parts":[{"heading":"De Moivre's theorem","kind":"code","pages":[11,12],"body":"clc()\na1 = 1; b1 = 2; a2 = 1; b2 = -1, a3 = 1; b3 = 2; a4 = 1; b4 = 1;\nz1 = complex(a1,b1);\nz2 = complex(a2,b2);\nz3 = complex(a3,b3);\nz4 = complex(a4,b4);\nn1 = 2;\nn2 = 1;\nn3 = -1;\nn4 = 1;\nz11 = z1^n1;\nz22 = z2^n2;\nz33 = z3^n3;\nz44 = z4^n4;\nz = (z11*z22)/(z33*z44);\ndisp(z11);\ndisp(z22);\ndisp(z33);\ndisp(z44);\ndisp(z);\nr1 = sqrt(a1^2 + b1^2);\nr2 = sqrt(a2^2 + b2^2);\nr3 = sqrt(a3^2 + b3^2);\nr4 = sqrt(a4^2 + b4^2);\nphi1 = atan(b1/a1);\nphi2 = atan(b2/a2);\nphi3 = atan(b3/a3);\nphi4 = atan(b4/a4);\nr11 = r1^n1;\nr22 = r2^n2;\nr33 = r3^n3;\nr44 = r4^n4;\nphi11 = phi1*n1;\nphi22 = phi2*n2;\nphi33 = phi3*n3;\nphi44 = phi4*n4;\np11 = r11*(cos(phi11) + %i*sin(phi11));\np22 = r22*(cos(phi22) + %i*sin(phi22));\np33 = r33*(cos(phi33) + %i*sin(phi33));\np44 = r44*(cos(phi44) + %i*sin(phi44));\np = (p11*p22)/(p33*p44);\ndisp(p);\nmprintf('%s\\t %s\\t %s\\t %s\\t\\n','a','b','r','phi');\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\n',a1,b1,r1,phi1);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\n',a2,b2,r2,phi2);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\n',a3,b3,r3,phi3);\nmprintf('%4.2f\\t %4.2f\\t %4.2f\\t %4.2f\\n',a4,b4,r4,phi4);","changes":["mprintf lines: the missing quotes around the format string and around `phi` were added."],"note":""},{"heading":"Manual calculation (check)","kind":"text","pages":[13,13],"body":"z₁ = 1 + 2i     n₁ = 2\nz₂ = 1 − i      n₂ = 1\nz₃ = 1 + 2i     n₃ = −1\nz₄ = 1 + i      n₄ = 1\n\nz = (z₁^n₁ · z₂^n₂) / (z₃^n₃ · z₄^n₄)\n\nr₁ = √(1² + 2²) = √(1+4) = √5 = 2.24\nr₂ = √(1² + (−1)²) = √(1+1) = √2 = 1.41\nr₃ = √(1² + 2²) = √(1+4) = √5 = 2.24\nr₄ = √(1² + 1²) = √(1+1) = √2 = 1.41\n\nθ₁ = tan⁻¹(2/1) = 63.43°\nθ₂ = tan⁻¹(−1/1) = −45.00°\nθ₃ = tan⁻¹(2/1) = 63.43°\nθ₄ = tan⁻¹(1/1) = 45.00°\n\nr₁₁ = (√5)² = 5.00\nr₂₂ = (√2)¹ = 1.41\nr₃₃ = (√5)⁻¹ = 0.45\nr₄₄ = (√2)¹ = 1.41\n\nR = (r₁₁ × r₂₂)/(r₃₃ × r₄₄) = (5 × √2)/((1/√5) × √2)\nR = 5√5 = 11.18\n\nTo calculate θ\nθ = (n₁θ₁ + n₂θ₂) − (n₃θ₃ + n₄θ₄)\n  = (126.87° − 45.00°) − (−63.43° + 45.00°)\n  = 81.87° − (−18.43°)\n  = 100.30°\n\nz = R(cos θ + i sin θ)\n  = 11.18(cos 100.30° + i sin 100.30°)\n  = 11.18 cos 100.30° + i 11.18 sin 100.30°\n  = 11.18(−0.1788) + i 11.18(0.9838)\n  = −2 + 11i\n\nNote: phi is in radians in the code output.","changes":["Small slips in the working are corrected: r₂ = √(1² + (−1)²), θ₂ = tan⁻¹(−1/1), θ₄ = +45° (the journal writes −45° but uses +45°), and the second term is i·11.18 sin 100.30°."],"note":""}],"note":""},{"id":"2a","title":"Laplace Transform","aim":"To find Laplace transform of given function and plot the same.","pages":[72,76],"parts":[{"heading":"L[cos t]","kind":"text","pages":[72,73],"body":"Q: Find L[cos t]\n\nL[cos t]\ncos t = (e^(it) + e^(−it))/2\n\nF(s) = ∫₀^∞ cos t · e^(−st) dt\n     = ∫₀^∞ ((e^(it) + e^(−it))/2) · e^(−st) dt\n     = (1/2) ∫₀^∞ (e^(it − st) + e^(−it − st)) dt\n     = (1/2) ∫₀^∞ (e^((i−s)t) + e^((−i−s)t)) dt\n     = (1/2) [ e^((i−s)t)/(i−s) + e^((−i−s)t)/(−i−s) ]₀^∞\n     = (1/2) [ ( e^((i−s)∞)/(i−s) + e^((−i−s)∞)/(−i−s) ) − ( e^((i−s)·0)/(i−s) + e^((−i−s)·0)/(−i−s) ) ]\n     = (1/2) [ 0 + 0 − ( 1/(i−s) + 1/(−i−s) ) ]\n     = (1/2) [ 1/(s−i) + 1/(s+i) ]\n     = (1/2) [ ((s+i) + (s−i)) / ((s−i)(s+i)) ]\n     = (1/2) [ (s+i+s−i) / (s² − i²) ]        (since i² = −1)\n     = (1/2) [ 2s/(s²+1) ]\n     = s/(s²+1)\n\nL[cos t] = s/(s²+1)\n\ncos at = (e^(iat) + e^(−iat))/2\n\nAnswer: L[cos t] = s/(s²+1)","changes":[],"note":""},{"heading":"L[e^(2t) sin t]","kind":"text","pages":[73,73],"body":"Q: Find L[e^(2t) sin t]\n\nL[e^(2t) sin t]\nL[sin t] = 1/(s²+1)\nsin t = (e^(it) − e^(−it))/(2i)\n\nL[f(t)] = L[e^(2t) sin t]\n\nUsing\n  L[e^(at) f(t)] = F(s−a)\n                 = 1/((s−2)²+1)\n\nL[e^(2t) sin t] = 1/((s−2)²+1) = 1/(s²−4s+5)\n\nAnswer: L[e^(2t) sin t] = 1/((s−2)²+1) = 1/(s²−4s+5)","changes":[],"note":""},{"heading":"L[t² e^(−t)]","kind":"text","pages":[74,74],"body":"Q: Find L[t² e^(−t)]\n\nf(t) = t² e^(−t)\n\nL[tⁿ] = n!/s^(n+1)\n\nFor, n = 2\n  L[t²] = 2!/s³ = 2/s³\n\nL[e^(−at) f(t)] = F(s+a)\n  a = 1\n\nL[t² e^(−t)] = 2/(s+1)³\n\nAnswer: L[t² e^(−t)] = 2/(s+1)³","changes":[],"note":""},{"heading":"L[cos 2t sin t]","kind":"text","pages":[74,75],"body":"Q: Find L[cos 2t sin t]\n\nf(t) = cos 2t sin t\n\nWe know,\n  sin A cos B = (1/2)[sin(A+B) + sin(A−B)]\n\nthen,\n  f(t) = (1/2)[sin(t+2t) + sin(t−2t)]\n       = (1/2)[sin(3t) + sin(−t)]\n       = (1/2)[sin 3t − sin t]\n\nL[f(t)] = (1/2) L[sin 3t] − (1/2) L[sin t]\n\nWe know,\n  L[sin at] = a/(s²+a²)\n\nTherefore,\n  = (1/2)[3/(s²+9)] − (1/2)[1/(s²+1)]\n  = 3/(2(s²+9)) − 1/(2(s²+1))\n  = (3(s²+1) − (s²+9)) / (2(s²+9)(s²+1))\n  = (3s² + 3 − s² − 9) / (2(s²+9)(s²+1))\n  = (2s² − 6) / (2(s²+9)(s²+1))\n  = 2(s² − 3) / (2(s²+9)(s²+1))\n  = (s² − 3) / ((s²+9)(s²+1))\n\nL[cos(2t) sin t] = (s² − 3)/((s²+9)(s²+1))\n\nAnswer: L[cos 2t sin t] = (s²−3)/((s²+9)(s²+1))","changes":[],"note":""},{"heading":"L[e^(2t) + cos 5t + 2]","kind":"text","pages":[76,76],"body":"Q: Find L[e^(2t) + cos 5t + 2]\n\nlet,\n  f(t) = e^(2t) + cos 5t + 2\n\nL[f(t)] = L[e^(2t)] + L[cos 5t] + L[2]\n\nWe know,\n  L[e^(at)] = 1/(s−a)\nSo,\n  L[e^(2t)] = 1/(s−2)\n\nAlso,\n  L[cos at] = s/(s²+a²)\nTherefore,\n  L[cos 5t] = s/(s²+25)\n\nand,\n  L[2] = 2/s\n\nL[e^(2t) + cos(5t) + 2] = 1/(s−2) + s/(s²+25) + 2/s\n\nAnswer: L[e^(2t) + cos 5t + 2] = 1/(s−2) + s/(s²+25) + 2/s","changes":[],"note":""}],"note":""},{"id":"2b","title":"Inverse Laplace Transform","aim":"","pages":[77,84],"parts":[{"heading":"L⁻¹[1/(s²+4)]","kind":"text","pages":[77,77],"body":"Q: Find L⁻¹[1/(s²+4)]\n\nlet,\n  F(s) = 1/(s²+4)\n\nL[sin(at)] = a/(s²+a²)\n\nHere, a = 2\nSo,\n  1/(s²+4) = (1/2)(2/(s²+4))\n\nTherefore,\n  L⁻¹[1/(s²+4)] = (1/2) sin(2t)\n\nf(t) = (1/2) sin(2t)\n\nAnswer: L⁻¹[1/(s²+4)] = (1/2) sin 2t","changes":[],"note":""},{"heading":"L⁻¹[s/(s²+2s+1)]","kind":"text","pages":[79,79],"body":"Q: Find L⁻¹[s/(s²+2s+1)]\n\nF(s) = s/(s²+2s+1)\n\nWe know,\n  s²+2s+1 = (s+1)²\nSo,\n  F(s) = s/(s+1)²\n\nWrite the numerator as:\n  s = (s+1) − 1\nTherefore,\n  F(s) = (s+1)/(s+1)² − 1/(s+1)²\n       = 1/(s+1) − 1/(s+1)²\n\nL⁻¹[1/(s+a)] = e^(−at)   and   L⁻¹[1/(s+a)²] = t e^(−at)\n\nf(t) = e^(−t) − t e^(−t)\nf(t) = e^(−t)(1 − t)\n\nAnswer: L⁻¹[s/(s²+2s+1)] = e^(−t)(1 − t)","changes":[],"note":""},{"heading":"L⁻¹[(2s+1)/(s²+6s+25)]","kind":"text","pages":[80,80],"body":"Q: Find L⁻¹[(2s+1)/(s²+6s+25)]\n\nlet,\n  F(s) = (2s+1)/(s²+6s+25)\n\ns²+6s+25 = s²+6s+9+16\n         = (s+3)²+16\nSo,\n  F(s) = (2s+1)/((s+3)²+4²)\n\n2s+1 = 2(s+3) − 5\nTherefore,\n  F(s) = 2(s+3)/((s+3)²+4²) − 5/((s+3)²+4²)\n\nWe know,\n  L⁻¹[(s+a)/((s+a)²+b²)] = e^(−at) cos bt\nand\n  L⁻¹[b/((s+a)²+b²)] = e^(−at) sin bt\n\nHence,\n  f(t) = 2e^(−3t) cos 4t − (5/4) e^(−3t) sin 4t\n  f(t) = e^(−3t) (2 cos 4t − (5/4) sin 4t)\n\nAnswer: L⁻¹[(2s+1)/(s²+6s+25)] = e^(−3t)(2 cos 4t − (5/4) sin 4t)","changes":[],"note":""},{"heading":"L⁻¹[1/((s+2)(s+3))]","kind":"text","pages":[81,81],"body":"Q: Find L⁻¹[1/((s+2)(s+3))]\n\n1/((s+2)(s+3)) = A/(s+2) + B/(s+3)\n\nMultiplying by (s+2)(s+3)\n  1 = A(s+3) + B(s+2)\n\nPut s = −2\n  1 = A(−2+3) + B(−2+2)\n  1 = A(1) + B(0)\n  1 = A + 0\n  A = 1\n\nPut s = −3\n  1 = A(−3+3) + B(−3+2)\n  1 = A(0) + B(−1)\n  1 = 0 − B\n  B = −1\n\nTherefore,\n  F(s) = 1/(s+2) − 1/(s+3)\n\nWe know,\n  L⁻¹[1/(s+a)] = e^(−at)\n\nHence,\n  f(t) = e^(−2t) − e^(−3t)\n\nAnswer: L⁻¹[1/((s+2)(s+3))] = e^(−2t) − e^(−3t)","changes":[],"note":""},{"heading":"L⁻¹[e^(−2s)·s/(s²+1)]","kind":"text","pages":[82,82],"body":"Q: Find L⁻¹[e^(−2s) · s/(s²+1)]\n\nF(s) = e^(−2s) · s/(s²+1)\n\nthen,\n  L⁻¹[s/(s²+1)] = cos t\n\nand\n  L[u(t−a) f(t−a)] = e^(−as) F(s)\n\nWe get,\n  f(t) = u(t−2) cos(t−2)\n\nAnswer: L⁻¹[e^(−2s) · s/(s²+1)] = u(t−2) cos(t−2)","changes":["The journal writes this question as 6^(2s)·s/(s²+1), but its working and answer are for e^(−2s)·s/(s²+1), so it is shown that way here."],"note":""},{"heading":"L⁻¹[1/s⁵]","kind":"text","pages":[83,83],"body":"Q: Find L⁻¹[1/s⁵]\n\nF(s) = 1/s⁵\nL⁻¹[1/s⁵]\n\nWe know,\n  L[tⁿ] = n!/s^(n+1)\nTherefore,\n  L⁻¹[n!/s^(n+1)] = tⁿ\n\ns⁵ = s^(4+1)\nTherefore,\n  n = 4\n  L[t⁴] = 4!/s⁵\n\nSince,\n  4! = 4×3×2×1 = 24\nWe get,\n  L(t⁴) = 24/s⁵\n\n1/s⁵ = (1/24)(24/s⁵)\n\nL⁻¹[1/s⁵] = (1/24) t⁴\n\nf(t) = t⁴/24\n\nAnswer: L⁻¹[1/s⁵] = t⁴/24","changes":[],"note":""},{"heading":"L⁻¹[1/(s+3)⁴]","kind":"text","pages":[84,84],"body":"Q: Find L⁻¹[1/(s+3)⁴]\n\nL⁻¹[1/(s+3)⁴]\n\nWe know,\n  L[tⁿ e^(−at)] = n!/(s+a)^(n+1)\n\nHere,\n  (s+3)⁴ = (s+3)^(3+1)\nSo,\n  n = 3,  a = 3\n\nThus,\n  L[t³ e^(−3t)] = 3!/(s+3)⁴\n\nSince,\n  3! = 6\nWe get,\n  1/(s+3)⁴ = (1/6)(6/(s+3)⁴)\n\nTherefore,\n  L⁻¹[1/(s+3)⁴] = t³ e^(−3t)/6\n\nAnswer: L⁻¹[1/(s+3)⁴] = t³ e^(−3t)/6","changes":[],"note":""}],"note":""},{"id":"2c","title":"Properties of Laplace Transform","aim":"","pages":[85,88],"parts":[{"heading":"L[sin t]","kind":"text","pages":[85,85],"body":"Q: Find L[sin t]\n\nlet,\n  f(t) = sin t\n  sin t = (e^(it) − e^(−it))/(2i)\n\nTherefore,\n  L[sin t] = (1/(2i)) ∫₀^∞ (e^(it) − e^(−it)) e^(−st) dt\n           = (1/(2i)) ∫₀^∞ (e^((i−s)t) − e^((−i−s)t)) dt\n           = (1/(2i)) [ e^((i−s)t)/(i−s) − e^((−i−s)t)/(−i−s) ]₀^∞\n\nfor s \u003e 0, the terms at ∞ become zero:\n           = (1/(2i)) [ −1/(i−s) + 1/(−i−s) ]\n           = (1/(2i)) [ 1/(s−i) − 1/(s+i) ]\n           = (1/(2i)) [ ((s+i) − (s−i)) / ((s−i)(s+i)) ]\n           = (1/(2i)) [ 2i/(s²+1) ]\n\nL[sin t] = 1/(s²+1)\n\nAnswer: L[sin t] = 1/(s²+1)","changes":[],"note":""},{"heading":"L[sin 2t]","kind":"text","pages":[86,86],"body":"Q: Find L[sin 2t]\n\nlet,\n  f(t) = sin 2t\n  sin 2t = (e^(2it) − e^(−2it))/(2i)\n\nTherefore,\n  L[sin 2t] = (1/(2i)) ∫₀^∞ (e^(2it) − e^(−2it)) e^(−st) dt\n            = (1/(2i)) ∫₀^∞ (e^((2i−s)t) − e^((−2i−s)t)) dt\n            = (1/(2i)) [ e^((2i−s)t)/(2i−s) − e^((−2i−s)t)/(−2i−s) ]₀^∞\n\nfor s \u003e 0\n            = (1/(2i)) [ −1/(2i−s) + 1/(−2i−s) ]\n            = (1/(2i)) [ ((s+2i) − (s−2i)) / ((s−2i)(s+2i)) ]\n            = (1/(2i)) [ 4i/(s²+4) ]\n\nL[sin 2t] = 2/(s²+4)\n\nAnswer: L[sin 2t] = 2/(s²+4)","changes":["A missing t in one exponent was added: e^((−2i−s)t)/(−2i−s)."],"note":""},{"heading":"L[t sin t]","kind":"text","pages":[87,87],"body":"Q: Find L[t sin t]\n\nlet,\n  f(t) = t sin t\n\nWe know,\n  L[sin t] = 1/(s²+1)\n\nL[t f(t)] = −(d/ds)[F(s)]\n\n  F(s) = 1/(s²+1)\n\nTherefore,\n  L[t sin t] = −(d/ds)(1/(s²+1))\n             = −(d/ds)(s²+1)⁻¹\n             = −[−1(s²+1)⁻² (2s)]\n             = 2s/(s²+1)²\n\nL[t sin t] = 2s/(s²+1)²\n\nAnswer: L[t sin t] = 2s/(s²+1)²","changes":[],"note":""},{"heading":"L[e^(−t) sin t]","kind":"text","pages":[88,88],"body":"Q: Find L[e^(−t) sin t]\n\nlet,\n  f(t) = e^(−t) sin t\n\nWe know,\n  L[sin t] = 1/(s²+1)\n\nL[e^(−at) f(t)] = F(s+a)\n\nHere, a = 1\nTherefore,\n  L[e^(−t) sin t] = 1/((s+1)²+1)\n\nL[e^(−t) sin t] = 1/(s²+2s+2)\n\nAnswer: L[e^(−t) sin t] = 1/((s+1)²+1) = 1/(s²+2s+2)","changes":[],"note":""},{"heading":"L[sin(t−5)]","kind":"text","pages":[88,88],"body":"Q: Find L[sin(t−5)]\n\nf(t) = sin(t−5)\n\nWe know,\n  sin(A−B) = sin A cos B − cos A sin B\n  sin(t−5) = sin t cos 5 − cos t sin 5\n\nL[sin(t−5)] = cos 5 L[sin t] − sin 5 L[cos t]\n\nL[sin t] = 1/(s²+1)   and   L[cos t] = s/(s²+1)\n\nSo,\n  = cos 5/(s²+1) − s sin 5/(s²+1)\n\nL[sin(t−5)] = (cos 5 − s sin 5)/(s²+1)\n\nAnswer: L[sin(t−5)] = (cos 5 − s sin 5)/(s²+1)","changes":["`sin t cos B` corrected to `sin t cos 5`."],"note":""}],"note":""},{"id":"3","title":"Solution of Differential Equations","aim":"","pages":[89,93],"parts":[{"heading":"y″ + e^(−t)·y′ = −y and y″ + 2y′ = −y","kind":"code","pages":[90,91],"body":"clf;\nclc;\nclear;\n// Define the system\nfunction dydt = f(t,y)\n    dydt = zeros(2,1);\n    dydt(1) = y(2);                  // dy1/dt = y2\n    dydt(2) = -exp(-t)*y(2)-y(1);    // dy2/dt = -e^(-t)y2-y1\nendfunction\n// Initial conditions.\ny0 = [1;0];   // y(0)=1, y'(0)=0 (change if needed)\nt0 = 0;\nt = 0:0.1:80;\n// Solve the system\ny = ode(y0,t0,t,f);\nscf\n// Plot y(t)\nplot(t,y(1,:))\nxlabel(\"t\")\nylabel(\"y(t)\")\ntitle(\"Solution of d^2y/dt^2+e^(-t) dy/dt = -y\")\nscf(1)\nfunction dYdT = f2(T,Y)\n    dYdT = zeros(2,1)\n    dYdT(1) = Y(2)\n    dYdT(2) = -2*Y(2)-Y(1)\nendfunction\nY0 = [1;0]\nT0 = 0;\nT = linspace(0,10,100)\nY2 = ode(Y0,T0,T,f2)\nplot(T,Y2(1,:))\nxlabel(\"t\")\nylabel(\"y(t)\")\ntitle(\"Solution of dy^2/dt^2+2dy/dt=-y\")","changes":["`endfunction.` → `endfunction` (stray full stop)."],"note":""},{"heading":"dy/dx = e^(−x) and ds/dt = s² − e^(−s)·t","kind":"code","pages":[91,92],"body":"//ODE dy/dt = e^(-x)\nclc;\nclf;\nclear;\nscf(0)\nfunction dydx = f(x,y)\n    dydx = exp(-x)\nendfunction\ny0 = 0\nx0 = 0\nscf(0)\nx = linspace(0,5,100)\nY = ode(y0,x0,x,f)\nplot(x,Y)\nxlabel(\"x\")\nylabel(\"Y\")\ntitle(\"Solution of dy/dx = e^-x\")\n// ODE ds/dt = s^2 - e^(-x)*t\nscf(1)\nfunction dqdr = f2(s,t)\n    dqdr = s^2 - exp(-s)*t\nendfunction\ns0 = 0\nt0 = 0\ns = 0:0.1:5\nt = ode(t0,s0,s,f2)\nplot(s,t)\nxlabel(\"s\")\nylabel(\"t\")\ntitle(\"Solution of [ds/dt = s^2 - e^(-s)*t]\")","changes":["`s = 0:0,1:5` → `s = 0:0.1:5` (decimal point, not a comma)."],"note":""},{"heading":"y″ + e^(−t)·y′ = −y, t from 0 to 10","kind":"code","pages":[92,93],"body":"clf;\nclc;\nclear;\n// Define the system\nfunction dydt = f(t,y)\n    dydt = zeros(2,1);\n    dydt(1) = y(2);                  //dy1/dt = y2\n    dydt(2) = -exp(-t)*y(2)-y(1);    // dy2/dt = -e^[-t]y2-y1\nendfunction\n//Initial conditions\ny0 = [1;0];   //y(0)=1, y'(0)=0 (change if needed)\nt0 = 0;\nt = 0:0.1:10;\n// Solve the system\ny = ode(y0,t0,t,f);\n// plot y(t)\nplot(t,y(1,:))\nxlabel(\"t\")\nylabel(\"y(t)\")\ntitle(\"Solution of d^2y/dt^2+e^(-t)dy/dt=-y\")","changes":[],"note":""}],"note":"Many lines in parts 1 and 2 have no semicolon, as in the journal, so Scilab prints values while ode() runs. That is expected."},{"id":"4a","title":"Inverse Fourier Transform","aim":"","pages":[14,19],"parts":[{"heading":"X(jW) = 1 from −T1 to T1","kind":"code","pages":[15,16],"body":"//Inverse Continuous Time Fourier Transform X(jW)=1, from -T1 to T1\nclear;\nclc;\nclose;\n//CTFT\nA = 1; //Amplitude\nDw = 0.005;\nW1 = 4; //Time in seconds.\nw = -W1/2:Dw:W1/2;\nfor i = 1:length(w)\n    XW(i) = A;\nend\nXW = XW';\n//Inverse Continuous-time Fourier Transform\nt = -%pi:%pi/length(w):%pi;\nxt = (1/(2*%pi))*XW*exp(sqrt(-1)*w'*t)*Dw;\nxt = real(xt);\nfigure\na = gca();\na.y_location = \"origin\",\na.x_location = \"origin\";\nplot(t,xt);\nxlabel('t time in seconds');\ntitle('Inverse Continuous Time Fourier Transform x(t)')","changes":[],"note":""},{"heading":"Impulse function","kind":"code","pages":[16,17],"body":"//Inverse Continuous Time Fourier Transform of impulse function.\nclear;\nclc;\nclose;\n//CTFT\nA = 1; //Amplitude\nDw = 0.005;\nW1 = 4; //Time in seconds\nw = -W1/2:Dw:W1/2;\nfor i = 1:length(w)\n    XW(i) = 1;\nend\nXW = XW';\n//Inverse Continuous-time Fourier Transform\nt = -0.01:1/length(w):0.01;\nxt = (1/(2*%pi))*XW*exp(sqrt(-1)*w'*t)*Dw;\nxt = real(xt);\nfigure\na = gca();\na.y_location = \"origin\";\na.x_location = \"origin\";\nplot(t,xt);\nxlabel('t time in seconds');\ntitle('Inverse Continuous Time Fourier Transform x(t)')","changes":["`XW(1) = 1;` → `XW(i) = 1;` inside the loop (with `XW(1)` only the first element is ever set and the plot breaks).","`Clear;` → `clear;` and `Figure` → `figure`: Scilab is case-sensitive."],"note":""},{"heading":"X(jW) = 2π at W = 0","kind":"code","pages":[17,18],"body":"//Inverse Continuous Time Fourier Transform X(jW)=2*pi, at W=0\nclear;\nclc;\nclose;\n//CTFT\nA = 1;\nDw = 0.005;\nW1 = 4;\nw = -W1/2:Dw:W1/2;\nfor i = 1:length(w)\n    if w(i) == 0 then\n        XW(i) = 2*%pi;\n    else\n        XW(i) = 0;\n    end\nend\nXW = XW';\nsubplot(2,1,1);\nplot(w,XW)\n//Inverse Continuous-time Fourier Transform\nt = -3*%pi:%pi/length(w):3*%pi;\nxt = (1/(2*%pi))*XW*exp(sqrt(-1)*w'*t)*Dw;\nxt = real(1+xt);\nsubplot(2,1,2)\nplot(t,xt)\nxlabel('t sec');\ntitle('Time domain signal x(t)')","changes":["`Clear;` → `clear;` and `Plot` → `plot`: Scilab is case-sensitive."],"note":""},{"heading":"X(jW) = 2π at W = W0","kind":"code","pages":[18,19],"body":"//Inverse Continuous Time Fourier Transform X(jW)=2*pi, at W=Wo\nclear;\nclc;\nclose;\n//CTFT\nA = 1;\nDw = 0.005;\nW1 = 4;\nWo = 2 //Assume Wo = 2\nw = -W1/2:Dw:W1/2;\nfor i = 1:length(w)\n    if w(i) == -Wo then\n        XW(i) = 2*%pi;\n    else\n        XW(i) = 0;\n    end\nend\nXW = XW';\n//Inverse Continuous-time Fourier Transform\nt = -3*%pi:%pi/length(w):3*%pi;\nxt = (1/(2*%pi))*XW*exp(sqrt(-1)*w'*t)*Dw;\nxt = real(1+xt);\nplot(t,xt);\nxlabel('t sec');\ntitle('Time domain signal x(t)')","changes":["`Clear;` → `clear;`.","`xt = real(1+x1);` → `xt = real(1+xt);` (x1 does not exist; part 3 has xt)."],"note":""}],"note":""},{"id":"4b","title":"Continuous Time Fourier Transform","aim":"","pages":[20,31],"parts":[{"heading":"x(t) = e^(−At)·u(t)","kind":"code","pages":[20,21],"body":"//Continuous Time Fourier Transform of a Signal x(t)=exp(-A*t)u(t), t\u003e0\nclear;\nclc;\nclose;\n//Analog Signal\nA = 1; //Amplitude\nT = 1;\nDt = 0.005;\nt = 0:Dt:10;\nxt = A*exp(-t/T);\n//Continuous-time Fourier Transform\nWmax = 2*%pi*1; //Analog Frequency = 1Hz\nK = 4;\nk = 0:(K/1000):K;\nW = k*Wmax/K;\nXW = xt*exp(-sqrt(-1)*t'*W)*Dt;\nXW_Mag = abs(XW);\nW = [-mtlb_fliplr(W), W(2:1001)]; //Omega from -Wmax to Wmax.\nXW_Mag = [mtlb_fliplr(XW_Mag), XW_Mag(2:1001)];\n[XW_Phase,db] = phasemag(XW);\nXW_Phase = [-mtlb_fliplr(XW_Phase), XW_Phase(2:1001)];\n//Plotting Continuous Time Signal\na = gca();\na.y_location = \"origin\";\nplot(t,xt);\nxlabel('t in sec.');\nylabel('x(t)')\ntitle('Continuous Time Signal')\nfigure\n//Plotting Magnitude Response of CTS\nsubplot(2,1,1);\na = gca();\na.y_location = \"origin\";\nplot(W,XW_Mag);\nxlabel('Frequency in Radians/seconds---\u003eW');\nylabel('abs(X(jW))')\ntitle('Magnitude Response (CTFT)')\n//Plotting Phase Response of CTS\nsubplot(2,1,2);\na = gca();\na.y_location = \"origin\";\na.x_location = \"origin\";\nplot(W,XW_Phase*%pi/180);\nxlabel('Frequency in Radians/Seconds---\u003eW');\nylabel('\u003cX(jW)')\ntitle('Phase Response (CTFT) in Radians')","changes":["`Plot(...)` → `plot(...)`: Scilab is case-sensitive."],"note":""},{"heading":"Unit step u(t)","kind":"code","pages":[22,22],"body":"//Continuous time signal analysis the fourier transform of unit step function u(t).\nclear;\nclc;\nA = 0.000000001; //Amplitude\nDt = 0.005;\nt = 0:Dt:4.5;\nxt = exp(-A*abs(t)); //Analog Frequency = 1Hz\nWmax = 2*%pi*1;\nK = 4;\nk = 0:(K/500):K;\nW = k*Wmax/K;\nXW = xt*exp(-sqrt(-1)*t'*W)*Dt;\nXW = real(XW);\nW = [-mtlb_fliplr(W), W(2:501)]; //Omega from -Wmax to Wmax.\nXW = [mtlb_fliplr(XW), XW(2:501)];\nsubplot(2,1,1);\na = gca();\na.y_location = \"origin\";\nplot(t,xt);\nxlabel('t in sec.');\na = gca();\na.y_location = \"origin\";\nplot(W,XW);\nxlabel('Frequency in Radians/Seconds W');\nylabel('X(jW)')\ntitle('Continuous-time Fourier Transform')","changes":["Added `Wmax = 2*%pi*1;` after the xt line. The journal uses Wmax without defining it (its `//Analog Frequency = 1Hz` comment shows the line was skipped); same value as the other parts."],"note":"As in the journal, both curves are drawn in the top panel (there is no `subplot(2,1,2)`)."},{"heading":"Square wave x(t) = A from −T1 to T1","kind":"code","pages":[23,24],"body":"//Continuous Time Fourier Transform and Frequency Response of a square Waveform x(t)= A, from -T1 to T1.\nclear;\nclc;\nclose;\n//CTS Signal\nA = 1; //Amplitude\nDt = 0.005;\nT1 = 4; //Time in seconds\nt = -T1/2:Dt:T1/2;\nfor i = 1:length(t)\n    xt(i) = A;\nend\n//Continuous-time Fourier Transform\nWmax = 2*%pi*1; //Analog Frequency = 1 Hz\nK = 4;\nk = 0:(K/1000):K;\nW = k*Wmax/K;\nxt = xt';\nXW = xt*exp(-sqrt(-1)*t'*W)*Dt;\nXW_Mag = real(XW);\nW = [-mtlb_fliplr(W), W(2:1001)]; //omega from -Wmax to Wmax\nXW_Mag = [mtlb_fliplr(XW_Mag), XW_Mag(2:1001)];\nsubplot(2,1,1);\na = gca();\na.data_bounds = [-4,0;4,2];\na.y_location = \"origin\";\nplot(t,xt);\nxlabel('t in msec.');\ntitle('Continuous Time Signal x(t)')\nsubplot(2,1,2);\na = gca();\na.y_location = \"origin\";\nplot(W,XW_Mag);\nxlabel('Frequency in Radians/seconds');\ntitle('Continuous-time Fourier Transform X(jW)')","changes":["`xt'exp(...)` → `xt*exp(...)` (an apostrophe where `*` belongs).","`k = 0:(k/1000):K` → `k = 0:(K/1000):K`.","`Close;` → `close;`."],"note":""},{"heading":"sin(W0·t)","kind":"code","pages":[25,25],"body":"//Continuous Time Fourier Transforms of sin(Wot)\nclc;\nclose;\n//CTFT\nT1 = 2;\nT = 4*T1;\nWo = 2*%pi/T;\nW = [-Wo,0,Wo];\nak = (2*%pi*Wo*T1/%pi)/sqrt(-1);\nXW = [-ak,0,ak];\n//figure\na = gca();\na.y_location = \"origin\";\na.x_location = \"origin\";\nplot2d3('gnn',W,imag(XW),2);\npoly1 = a.children(1).children(1);\npoly1.thickness = 3;\nxlabel('W');\ntitle('CTFT of sin(Wot)')","changes":["`Ploy 1` / `Poly 1` → `poly1` and `plot 2d3` → `plot2d3`.","Removed a full stop after the last `title(...)`."],"note":""},{"heading":"cos(W0·t)","kind":"code","pages":[26,26],"body":"//Continuous Time Fourier Transforms of cos(Wot)\nclc;\nclose;\n//CTFT\nT1 = 2;\nT = 4*T1;\nWo = 2*%pi/T;\nW = [-Wo,0,Wo];\nak = (2*%pi*Wo*T1/%pi);\nXW1 = [-ak,0,ak];\nfigure\na = gca();\na.y_location = \"origin\";\na.x_location = \"origin\";\nplot2d3('gnn',W,XW1,2);\npoly1 = a.children(1).children(1);\npoly1.thickness = 3;\nxlabel('W');\ntitle('CTFT of cos(Wot)')","changes":["`ploy1` / `Poly 1` → `poly1`."],"note":"As in the journal, `XW1 = [-ak,0,ak]` draws one impulse downwards. For cos(W0·t) both impulses are positive: `XW1 = [ak,0,ak];`"},{"heading":"x(t) = cos(wc·t)·u(t)","kind":"code","pages":[27,28],"body":"//Fourier Transform of Continuous Time Signal x(t)=cos(wc*t)*u(t)\nclear;\nclc;\nclose;\nwc = 1;\nDt = 0.005;\nt = 0:Dt:10;\nxt = (exp(wc*t)+exp(-wc*t))/2;\nWmax = 2*%pi*1;\nK = 4;\nk = 0:(K/1000):K;\nW = k*Wmax/K;\nXW = xt*exp(-sqrt(-1)*t'*W)*Dt;\nXW_Mag = abs(XW);\nW = [-mtlb_fliplr(W), W(2:1001)];\nXW_Mag = [mtlb_fliplr(XW_Mag), XW_Mag(2:1001)];\n[XW_Phase,db] = phasemag(XW);\nXW_Phase = [-mtlb_fliplr(XW_Phase), XW_Phase(2:1001)];\n//Plotting Continuous Time Signal\nfigure(1)\nplot(t,xt);\nxlabel('t in sec.');\nylabel('x(t)')\ntitle('Continuous Time Signal')\nfigure(2)\n//Plotting Magnitude Response of CTS\nsubplot(2,1,1);\nplot(W,XW_Mag);\nxlabel('Frequency in Radians/Seconds \u003eW');\nylabel('abs(X(jW))')\ntitle('Magnitude Response (CTFT)')\n//Plotting Phase Response of CTS\nsubplot(2,1,2);\nplot(W,XW_Phase*%pi/180);\nxlabel('Frequency in Radians/seconds \u003eW');\nylabel('\u003cW(jW)')\ntitle('Phase Response (CTFT) in Radians')","changes":["Two lines dropped while copying were restored, the same as in parts 1, 7 and 8: `XW_Mag = [mtlb_fliplr(XW_Mag), XW_Mag(2:1001)];` and `[XW_Phase,db] = phasemag(XW);`."],"note":"As in the journal, the x(t) line has no %i, so it computes cosh(t) and the graph shoots up to about 11000. The textbook line is `xt = (exp(%i*wc*t)+exp(-%i*wc*t))/2;` (checked: it gives cos(t))."},{"heading":"x(t) = e^(−t)·sin(wc·t)·u(t)","kind":"code","pages":[28,29],"body":"//Fourier Transform of x(t)=exp(-t)*sin(wc*t)*u(t)\nclear;\nclc;\nwc = 1;\nDt = 0.005;\nt = 0:Dt:10;\nxt = (exp(t*(-1+wc))-exp(t*(-1-wc)))/(2*%i);\nWmax = 2*%pi*1;\nK = 4;\nk = 0:(K/1000):K;\nW = k*Wmax/K;\nXW = xt*exp(-sqrt(-1)*t'*W)*Dt;\nXW_Mag = abs(XW);\nW = [-mtlb_fliplr(W), W(2:1001)];\nXW_Mag = [mtlb_fliplr(XW_Mag), XW_Mag(2:1001)];\n[XW_Phase,db] = phasemag(XW);\nXW_Phase = [-mtlb_fliplr(XW_Phase), XW_Phase(2:1001)];\n//Plotting Continuous Time Signal\nfigure(1)\nplot(t,xt);\nxlabel('t in sec.');\nylabel('x(t)')\ntitle('Continuous Time Signal')\nfigure(2)\n//Plotting Magnitude Response of CTS\nsubplot(2,1,1);\nplot(W,XW_Mag);\nxlabel('Frequency in Radians/Seconds \u003eW');\nylabel('abs(X(jW))')\ntitle('Magnitude Response (CTFT)')\n//Plotting Phase Response of CTS\nsubplot(2,1,2);\nplot(W,XW_Phase*%pi/180);\nxlabel('Frequency in Radians/Seconds \u003eW');\nylabel('\u003cX(jW)')\ntitle('Phase Response (CTFT) in Radians')","changes":["Removed a full stop after the last `title(...)`."],"note":"As in the journal, the x(t) line has no %i, so the x(t) graph comes out as a flat zero line. The textbook line is `xt = (exp(t*(-1+%i*wc))-exp(t*(-1-%i*wc)))/(2*%i);` (checked: it gives e^(−t)·sin(t))."},{"heading":"x(t) = e^(−at)·cos(wc·t)·u(t)","kind":"code","pages":[30,31],"body":"//Fourier Transform of x(t)=exp(-a*t)*cos(wc*t)*u(t)\nclear;\nclc;\na = 1;\nwc = 1;\nDt = 0.005;\nt = 0:Dt:10;\nxt = (exp(t*(-a+wc))+exp(t*(-a-wc)))/2;\nWmax = 2*%pi*1;\nK = 4;\nk = 0:(K/1000):K;\nW = k*Wmax/K;\nXW = xt*exp(-sqrt(-1)*t'*W)*Dt;\nXW_Mag = abs(XW);\nW = [-mtlb_fliplr(W), W(2:1001)];\nXW_Mag = [mtlb_fliplr(XW_Mag), XW_Mag(2:1001)];\n[XW_Phase,db] = phasemag(XW);\nXW_Phase = [-mtlb_fliplr(XW_Phase), XW_Phase(2:1001)];\n//Plotting Continuous Time signal\nfigure(1)\nplot(t,xt)\nxlabel('t in sec.');\nylabel('x(t)')\ntitle('Continuous Time Signal')\nfigure(2)\n//Plotting Magnitude Response of CTS\nsubplot(2,1,1);\nplot(W,XW_Mag);\nxlabel('Frequency in Radians/Seconds \u003eW');\nylabel('abs(X(jW))')\ntitle('Magnitude Response (CTFT)')\n//Plotting Phase Response of CTS\nsubplot(2,1,2);\nplot(W,XW_Phase*%pi/180);\nxlabel('Frequency in Radians/Seconds \u003eW');\nylabel('\u003cX(jW)')\ntitle('Phase Response (CTFT) in Radians')","changes":["Removed a full stop after the last `title(...)`."],"note":"As in the journal, the x(t) line has no %i, so it computes (1+e^(−2t))/2. The textbook line is `xt = (exp(t*(-a+%i*wc))+exp(t*(-a-%i*wc)))/2;` (checked: it gives e^(−t)·cos(t))."}],"note":""},{"id":"4c","title":"Properties of CTFT","aim":"Properties of CTFT. Parts 6 to 8: system response using Fourier transform.","pages":[32,40],"parts":[{"heading":"Multiplication property","kind":"code","pages":[32,32],"body":"// Multiplication Property of CTFT\nclear;\nclc;\nclose;\nW1=-1:0.1:1;\nW2=-2:0.1:2;\nW=-3:0.1:3;\n// Fourier Transform of sinc function is square wave\nXW1=(1/%pi)*ones(1,length(W1)); //CTFT of x1(t)\nXW2=(1/(2*%pi))*ones(1,length(W2)); //CTFT of x2(t)\nXW=(1/2)*convol(XW1,XW2); //CTFT of x(t)=x1(t)*x2(t)\n// X(jw)=linear convolution of X1(jw) and X2(jw)\nfigure\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot(W,XW)\nxlabel('Frequency in Radians/seconds --\u003e W');\ntitle('Multiplication Property X(jW)')","changes":["Decimal commas → points: `-1:0,1:1` → `-1:0.1:1` (same in W2 and W).","`(1(2*%pi))` → `(1/(2*%pi))`."],"note":""},{"heading":"Differentiation property","kind":"code","pages":[33,34],"body":"//Continuous Time Fourier Transform: Derivative Property.\nclear;\nclc;\nclose;\n//CTFT\nt=-1:0.1:1;\nx1=ones(1,length(t));\nx2=[-1,zeros(1,length(t)-2),-1];\nx=t;\n//differentiation of x can be expressed as sum of x1 and x2\nsubplot(3,1,1)\na=gca();\na.x_location=\"origin\";\na.y_location=\"origin\";\nplot(t,x1)\nxtitle('x1(t)')\nsubplot(3,1,2)\na=gca();\na.x_location=\"origin\";\na.y_location=\"origin\";\nplot2d3('gnn',t,x2)\nxtitle('x2(t)')\nsubplot(3,1,3)\na=gca();\na.x_location=\"origin\";\na.y_location=\"origin\";\nplot(t,x)\nxtitle('x(t)')","changes":["`-1:0,1:1` → `-1:0.1:1`.","Removed 6 lines written twice at the page turn (pp. 33–34). Left in, they redraw x2 inside the x(t) panel."],"note":""},{"heading":"Linearity and time shift property","kind":"code","pages":[34,35],"body":"//Continuous Time Fourier Transform Properties: Linearity and Time Shift Property.\nclear;\nclc;\nclose;\n//CTFT\nt1=-1/2:0.1:1/2;\nt2=-3/2:0.1:3/2;\nx1=ones(1,length(t1));\nx2=ones(1,length(t2));\nt3=t1+2.5;\nt4=t2+2.5;\nx=[x2(1:floor(length(x2)/3)),x1+x2(ceil(length(x2)/3):$-floor(length(x2)/3)),x2(($-ceil(length(x2)/3))+2:$)];\nsubplot(3,1,1)\na=gca();\na.x_location=\"origin\";\na.y_location=\"origin\";\nplot(t2,x2)\nxtitle('x2(t)')\nsubplot(3,1,3)\na=gca();\na.x_location=\"origin\";\na.y_location=\"origin\";\nplot(t4,x)\nxtitle('x(t)')","changes":["`0,1` → `0.1` in t1 and t2.","`floor(length(x2)/2)` → `floor(length(x2)/3)`, so x has the same length as t4 (otherwise `plot(t4,x)` fails)."],"note":"As in the journal, the middle panel stays empty: there is no x1(t) plot."},{"heading":"Convolution property","kind":"code","pages":[35,36],"body":"//Convolution Property\nclear;\nclc;\nclose;\ndisp(\"X(w)=1/(a+jw)^2=1/(a+jw)*1/(a+jw)\");\ndisp(\"exp(-a*t)*u(t) \u003c--\u003e1/(a+jw)\");\ndisp(\"therefore x(t)=convolution(exp(-a*t)*u(t),exp(-a*t)*u(t))\");\na=2;\nt=0:0.1:10;\ny=exp(-a*t);\nz=convol(y,y);\ndisp(\"t*exp(-a*t)*u(t) \u003c--\u003e1/(a+jw)^2\");\nt1=[-t($:-1:2) t];\na=gca()\nplot(t1,z);\npoly1=a.children.children;\npoly1.thickness=3;\npoly1.foreground=2;\nxtitle('x(t)','t')","changes":["`0:0,1:10` → `0:0.1:10`."],"note":""},{"heading":"Frequency shifting property","kind":"code","pages":[36,36],"body":"// frequency shifting Property\nclear;\nclc;\ndt=.1;\nw0=.8; // positive number\nt=-10:dt:10;\nx=sin(w0*t); //or 1/2*(exp(-j*w*t)+exp(j*w*t))\nplot(t,x);\na=gca()\npoly1=a.children.children;\npoly1.thickness=3;\npoly1.foreground=2;\nxtitle('x(t)','t')\nwmax=10;\nw=-wmax:0.1:wmax;\nxw=x*exp(-%i*(w'*t))*dt;\nfigure\na=gca()\nplot2d3(w,round(abs(xw/10)));\npoly1=a.children.children;\npoly1.thickness=2;\npoly1.foreground=2;\nxtitle('x(w)','w')","changes":[],"note":"This part has no `close;` at the start, so close any open graphics window before running it."},{"heading":"System response: H(w) and impulse response h(t)","kind":"code","pages":[37,38],"body":"//System Response\nclear;\nclc;\nclose;\ndisp(\"System given is dy(t)/dt+2y(t)=x(t)+dx(t)/dt\");\ndisp(\"taking fourier transform on both sides we get\");\ndisp(\"H(w)=Y(w)/X(w)=1-(1/(2+%j*w))\");\nw=-10:0.1:10;\ndw=.1;\nHw=1-ones(1,length(w))./(2+%i*w);\nt=0:0.1:10;\nd=gca()\nplot(w,Hw);\npoly1=d.children.children;\npoly1.thickness=3;\npoly1.foreground=2;\nxtitle('x(w)','w')\nfor i=1:length(t)\n    if t(i)==0 then\n        delta(i)=1;\n    else\n        delta(i)=0;\n    end\nend\nh=delta'-exp(-2*t);\nfigure;\nd=gca()\nplot(t,(h));\npoly1=d.children.children;\npoly1.thickness=3;\npoly1.foreground=2;\nxtitle('h(t)','t')","changes":["`poly2.foreground` → `poly1.foreground` (poly2 does not exist)."],"note":""},{"heading":"System response: step input","kind":"code","pages":[38,39],"body":"//System Response\nclear;\nclc;\nclose;\ndisp(\"dy(t)/dt+2y(t)=x(t)\");\nw=0.1:0.1:10;\nt=w;\ndw=.1;\nXw=ones(1,length(w))./(%i*w);\nHw=ones(1,length(w))./(2+%i*w);\nYw=Xw.*Hw;\ny=Yw*exp(%i*t'*w)*dw;\nd=gca()\nplot(t,y);\npoly1=d.children.children;\npoly1.thickness=3;\npoly1.foreground=2;\nxtitle('y(t)','t')\nyy=0.5*(1-exp(-2*t));\ndisp(\"y(t)=0.5(1-exp(-2*t))\")\nfigure\nd=gca()\nplot(t,yy);\npoly1.thickness=3;\npoly1.foreground=2;\nxtitle('y(t)','t')","changes":[],"note":""},{"heading":"System response: exponential input","kind":"code","pages":[39,40],"body":"//System Response\nclear;\nclc;\nclose;\ndisp(\"dy(t)/dt+2y(t)=x(t)\");\nw=0:0.1:10;\nt=w;\ndw=.1;\nXw=ones(1,length(w))./(1+%i*w);\nHw=ones(1,length(w))./(2+%i*w);\nYw=Xw.*Hw;\ny=Yw*exp(%i*t'*w)*dw*.3;\nd=gca()\nplot(t,y);\npoly1=d.children.children;\npoly1.thickness=3;\npoly1.foreground=2;\nxtitle('y(t)','t')\nyy=exp(-t)-exp(-2*t);\ndisp(\"y(t)=exp(-t)-exp(-2*t)\")\nfigure\nd=gca()\nplot(t,yy);\npoly1=d.children.children;\npoly1.thickness=3;\npoly1.foreground=2;\nxtitle('y(t)','t')","changes":["`disp('...\")` → `disp(\"...\")` (mismatched quotes).","Removed a stray `]` after `dw*.3`."],"note":""}],"note":""},{"id":"4d","title":"Discrete Time Fourier Transform","aim":"","pages":[41,48],"parts":[{"heading":"x[n] = aⁿ·u[n] for a \u003e 0 and a \u003c 0","kind":"code","pages":[42,44],"body":"//Discrete Time Fourier Transform of discrete sequence x[n]=(a^n).u[n], a\u003e0 and a\u003c0.\nclear;\nclc;\nclose;\n// DTS signal\na1=0.5;\na2=-0.5;\nmax_limit=10;\nfor n=0:max_limit-1\n    x1(n+1)=(a1^n);\n    x2(n+1)=(a2^n);\nend\nn=0:max_limit-1;\n//Discrete-time Fourier Transform\nWmax=2*%pi;\nK=4;\nk=0:(K/1000):K;\nW=k*Wmax/K;\nx1=x1';\nx2=x2';\nXW1=x1*exp(-sqrt(-1)*n'*W);\nXW2=x2*exp(-sqrt(-1)*n'*W);\nXW1_Mag=abs(XW1);\nXW2_Mag=abs(XW2);\nW=[-mtlb_fliplr(W),W(2:1001)]; //Omega from -Wmax to Wmax\nXW1_Mag=[mtlb_fliplr(XW1_Mag),XW1_Mag(2:1001)];\nXW2_Mag=[mtlb_fliplr(XW2_Mag),XW2_Mag(2:1001)];\n[XW1_Phase,db]=phasemag(XW1);\n[XW2_Phase,db]=phasemag(XW2);\nXW1_Phase=[-mtlb_fliplr(XW1_Phase),XW1_Phase(2:1001)];\nXW2_Phase=[-mtlb_fliplr(XW2_Phase),XW2_Phase(2:1001)];\n//plot for a\u003e0\nfigure\nsubplot(3,1,1);\nplot2d3('gnn',n,x1);\nxtitle('Discrete Time Sequence x[n] for a\u003e0')\nsubplot(3,1,2);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW1_Mag);\ntitle('Magnitude Response abs(X(jW))')\nsubplot(3,1,3);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW1_Phase);\ntitle('Phase Response \u003c(X(jW))')\n//plot for a\u003c0\nfigure\nsubplot(3,1,1);\nplot2d3('gnn',n,x2);\nxtitle('Discrete Time Sequence x[n] for a\u003e0')\nsubplot(3,1,2);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW2_Mag);\ntitle('Magnitude Response abs(X(jW))')\nsubplot(3,1,3);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW2_Phase);\ntitle('Phase Response \u003c(X(jW))')","changes":[],"note":""},{"heading":"x[n] = 1 for |n| ≤ N1","kind":"code","pages":[45,46],"body":"//Discrete Time Fourier Transform of x[n]=1, abs(n)\u003c=N1\nclear;\nclc;\nclose;\n//DTS signal\nN1=2;\nn=-N1:N1;\nx=ones(1,length(n));\n//Discrete-time Fourier Transform\nWmax=2*%pi;\nK=4;\nk=0:(K/1000):K;\nW=k*Wmax/K;\nXW=x*exp(-sqrt(-1)*n'*W);\nXW_Mag=real(XW);\nW=[-mtlb_fliplr(W),W(2:1001)]; //Omega from -Wmax to Wmax\nXW_Mag=[mtlb_fliplr(XW_Mag),XW_Mag(2:1001)];\n//plot for abs(a)\u003c1\nfigure\nsubplot(2,1,1);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d3('gnn',n,x);\nxtitle('Discrete Time Sequence x[n]')\nsubplot(2,1,2);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW_Mag);\ntitle('Discrete Time Fourier Transform X(exp(jW))')","changes":[],"note":""},{"heading":"x[n] = cos(n·W0)","kind":"code","pages":[46,46],"body":"//Discrete Time Fourier Transform: x[n]=cos(nWo)\nclear;\nclc;\nclose;\nN=5;\nWo=2*%pi/N;\nW=[-Wo,0,Wo];\nXW=[%pi,0,%pi]\nfigure\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d3('gnn',W,XW,2);\npoly1=a.children(1).children(1);\npoly1.thickness=3;\nxlabel('W');\ntitle('DTFT of cos(nWo)')\ndisp(Wo)","changes":[],"note":""},{"heading":"x[n] = n·aⁿ·u[n] for a \u003e 0 and a \u003c 0","kind":"code","pages":[47,48],"body":"//Discrete Time Fourier Transform of discrete sequence x[n]=(n)*(a^n).u[n], a\u003e0 and a\u003c0\nclear;\nclc;\nclose;\n//DTS signal\na1=0.5;\na2=-0.5;\nmax_limit=10;\nfor n=0:max_limit-1\n    x1(n+1)=(n)*(a1^n);\n    x2(n+1)=(n)*(a2^n);\nend\nn=0:max_limit-1;\nWmax=2*%pi;\nK=4;\nk=0:(K/1000):K;\nW=k*Wmax/K;\nx1=x1';\nx2=x2';\nXW1=x1*exp(-sqrt(-1)*n'*W);\nXW2=x2*exp(-sqrt(-1)*n'*W);\nXW1_Mag=abs(XW1);\nXW2_Mag=abs(XW2);\nW=[-mtlb_fliplr(W),W(2:1001)];\nXW1_Mag=[mtlb_fliplr(XW1_Mag),XW1_Mag(2:1001)];\nXW2_Mag=[mtlb_fliplr(XW2_Mag),XW2_Mag(2:1001)];\n[XW1_Phase,db]=phasemag(XW1);\n[XW2_Phase,db]=phasemag(XW2);\nXW1_Phase=[-mtlb_fliplr(XW1_Phase),XW1_Phase(2:1001)];\nXW2_Phase=[-mtlb_fliplr(XW2_Phase),XW2_Phase(2:1001)];\nfigure\nsubplot(3,1,1);\nplot2d3('gnn',n,x1);\nxtitle('Discrete Time Sequence x[n] for a\u003e0')\nsubplot(3,1,2);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW1_Mag);\ntitle('Magnitude Response abs(X(jW))')\nsubplot(3,1,3);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW1_Phase);\ntitle('Phase Response \u003c(X(jW))')\n//plot for a\u003c0\nfigure\nsubplot(3,1,1);\nplot2d3('gnn',n,x2);\nxtitle('Discrete Time Sequence x[n] for a\u003e0')\nsubplot(3,1,2);\n// Added: the journal page ends here. The lines below finish the figure, as in part 1.\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW2_Mag);\ntitle('Magnitude Response abs(X(jW))')\nsubplot(3,1,3);\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d(W,XW2_Phase);\ntitle('Phase Response \u003c(X(jW))')","changes":["The journal stops at `subplot(3,1,2);` at the bottom of page 48. The 11 lines after the `// Added` comment finish the a \u003c 0 figure, copied from part 1."],"note":""}],"note":""},{"id":"4e","title":"Inverse Discrete Time Fourier Transform","aim":"","pages":[49,51],"parts":[{"heading":"Inverse DTFT of an ideal high-pass spectrum (Wc = 1)","kind":"code","pages":[50,51],"body":"clear;\nclc;\nwc=1;\ny=1;\nfor n=-%pi:%pi/80:%pi\n    if n\u003c-wc|n\u003ewc then\n        X(1,y)=1;\n        y=y+1;\n    else X(1,y)=0;\n        y=y+1;\n    end\nend\nn=-%pi:%pi/80:%pi;\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot(n,X);\nxlabel('Frequency in Radians/seconds');\ntitle('X(e^jw) at Wc=1');\nA=1/%pi;\nfor k=-10:10\n    x(k+11)=A*integrate('cos(w*k)','w',wc,%pi);\nend\nfigure(1);\nk=-10:10;\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot2d3(k,x);\nxlabel('Time in seconds');\ntitle('x(n) at Wc=1');","changes":[],"note":""}],"note":""},{"id":"4f","title":"Properties of DTFT","aim":"","pages":[52,56],"parts":[{"heading":"Frequency Shifting Property of DTFT","kind":"code","pages":[53,54],"body":"// Frequency Shifting Property of DTFT\nclear;\nclc;\nclose;\nWc=1; // 1 rad/sec\nW=-Wc:0.1:Wc; // Passband of filter\nH0=1; // Magnitude of Filter\nH1pW=H0*ones(1,length(W));\nWhp1=W+%pi;\nWhp2=-W-%pi;\nfigure\nsubplot(2,1,1)\na=gca()\na.y_location=\"origin\";\na.x_location=\"origin\";\na.data_bounds=[-%pi,0;%pi,2];\nplot2d(W,H1pW);\nxtitle('Frequency Response of LPF H(exp(jW))')\nsubplot(2,1,2)\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\na.data_bounds=[-2*%pi,0;2*%pi,2];\nplot2d(Whp1,H1pW);\nplot2d(Whp2,H1pW);\nxtitle('Frequency Response of HPF H(exp(jW))')","changes":[],"note":""},{"heading":"Time Expansion Property of DTFT","kind":"code","pages":[54,55],"body":"// Time Expansion Property of DTFT\nclear;\nclose;\nclc;\nn=-1:11;\nx=[0,1,2,1,2,1,2,1,2,1,2,0,0];\ny=[1,1,1,1,1];\ny_2_n=zeros(1,2*length(y)+1);\ny_2_n(1:2:2*length(y))=y;\ny_2_n=[0 y_2_n 0];\ny_2_n_1=[0,y_2_n(1:$-1)];\nx_r=y_2_n+2*y_2_n_1;\ny=[0,y,zeros(1,7)];\nfigure\nsubplot(4,1,1)\nplot2d3('gnn',n,y)\ntitle('y[n]')\nsubplot(4,1,2)\nplot2d3('gnn',n,y_2_n)\ntitle('y(2)[n]')\nsubplot(4,1,3)\nplot2d3('gnn',n,y_2_n_1)\ntitle('y(2)[n-1]')\nsubplot(4,1,4)\nplot2d3('gnn',n,x)\ntitle('x[n]=y(2)[n]+2*y(2)[n-1]')","changes":[],"note":""},{"heading":"Multiplication Property of DTFT","kind":"code","pages":[55,56],"body":"// Multiplication Property of DTFT\nclear;\nclc;\nclose;\nn=1:100;\nx2=[3/4,sin(0.75*%pi*n)./(%pi*n)];\nx1=[1/2,sin(0.5*%pi*n)./(%pi*n)];\nx=x1.*x2;\nWmax=%pi;\nK=1;\nk=0:(K/1000):K;\nW=k*Wmax/K;\nn=0:100;\nXW1=x1*exp(-sqrt(-1)*n'*W);\nXW2=x2*exp(-sqrt(-1)*n'*W);\nXW=x*exp(-sqrt(-1)*n'*W);\nXW1_Mag=real(XW1);\nXW2_Mag=real(XW2);\nXW_Mag=real(XW);\nW=[-mtlb_fliplr(W),W(2:$)]; // Omega from -Wmax to Wmax\nXW1_Mag=[mtlb_fliplr(XW1_Mag),XW1_Mag(2:$)];\nXW2_Mag=[mtlb_fliplr(XW2_Mag),XW2_Mag(2:$)];\nXW_Mag=[mtlb_fliplr(XW_Mag),XW_Mag(2:$)];\nfigure\nsubplot(3,1,1)\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot(W,XW1_Mag);\ntitle('DTFT X1(exp(jW))');\nsubplot(3,1,2)\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot(W,XW2_Mag);\ntitle('DTFT X2(exp(jW))');\nsubplot(3,1,3)\na=gca();\na.y_location=\"origin\";\na.x_location=\"origin\";\nplot(W,XW_Mag);\ntitle('Multiplication Property of DTFT');","changes":[],"note":""}],"note":""},{"id":"5a","title":"Z-Transform","aim":"","pages":[57,60],"parts":[{"heading":"Z-transform of [2 -1 3 2 1 0 2 3 -1] (n = -4 to 4)","kind":"code","pages":[58,58],"body":"clear;\n// z-transform of [2 -1 3 2 1 0 2 3 -1]\nclear;\nclc;\nclose;\nfunction [za]=ztransfer(sequence,n)\n    z=poly(0,'z','r')\n    za=sequence*(1/z)^n'\nendfunction\nx1=[2 -1 3 2 1 0 2 3 -1];\nn=-4:4;\nzz=ztransfer(x1,n);\n// Display the result in command window\ndisp(zz,\"Z-transform of sequence is :\");\ndisp('ROC is the entire plane except z=0 and z=%inf');","changes":[],"note":""},{"heading":"Z-transform of [1,2,3,4,5,6,7]","kind":"code","pages":[59,59],"body":"clear;\n// z-transform of [1,2,3,4,5,6,7]\nclc,\nfunction [za]=ztransfer(sequence,n)\n    z=poly(0,'z','r')\n    za=sequence*(1/z)^n'\nendfunction\nx=[1,2,3,4,5,6,7];\nn1=0:length(x)-1;\nX=ztransfer(x,n1);\ndisp('X(z)=');\ndisp(X);\nfuncprot(0);","changes":[],"note":""},{"heading":"Z-transform of [1,2,3,4,5,6,7] with different range (n = -2 to 4)","kind":"code","pages":[59,59],"body":"clear,\n// z-transform of [1,2,3,4,5,6,7] with different range.\nclc;\nfunction [za]=ztransfer(sequence,n)\n    z=poly(0,'z','r')\n    za=sequence*(1/z)^n'\nendfunction\nx=[1,2,3,4,5,6,7];\nn1=-2:length(x)-3;\nX=ztransfer(x,n1);\ndisp(X,'X(z)=');\nfuncprot(0);","changes":[],"note":""},{"heading":"Z-transform of [1,2,3,4,5,0,7]","kind":"code","pages":[60,60],"body":"clear;\n// z-transform of [1,2,3,4,5,0,7]\nclc;\nfunction [za]=ztransfer(sequence,n)\n    z=poly(0,'z','r')\n    za=sequence*(1/z)^n'\nendfunction\nx=[1,2,3,4,5,0,7];\nn1=0:length(x)-1;\nX=ztransfer(x,n1)\ndisp(X);\nfuncprot(0);","changes":[],"note":""},{"heading":"Z-transform of [4,2,-1,0,3,-4] (n = -2 to 3)","kind":"code","pages":[60,60],"body":"clear;\n// z-transform of [4,2,-1,0,3,-4]\nclc;\nfunction [za]=ztransfer(sequence,n)\n    z=poly(0,'z','r')\n    za=sequence*(1/z)^n'\nendfunction\nx=[4,2,-1,0,3,-4]\nn1=-2:length(x)-3;\nX=ztransfer(x,n1);\ndisp(X,'X(z)=');\nfuncprot(0);","changes":[],"note":""}],"note":""},{"id":"5b","title":"Inverse Z-Transform","aim":"","pages":[61,63],"parts":[{"heading":"Inverse z-transform using long division method","kind":"code","pages":[62,62],"body":"clear; // Find the inverse z-transform using long division method.\nclc;\nclear;\nz=poly(0,'z');\nx=ldiv(z^3-10*z^2-4*z+4,2*z^2-2*z-4,4);\ndisp(x,'x[n]=');","changes":[],"note":""},{"heading":"Find the inverse z-transform","kind":"code","pages":[62,62],"body":"clear; // Find the inverse z-transform\nclc;\nclear;\nz=poly(0,'z');\nx=ldiv((z+1),(z-1/3),4);\ndisp(x,'x[n]=');","changes":[],"note":""},{"heading":"Inverse z-transform using long division method","kind":"code","pages":[62,62],"body":"clear; // Inverse z-transform using long division method.\nclc;\nclear;\nz=poly(0,'z');\nx=ldiv(z,(z-0.5),4);\ndisp(x,'x[n]=');","changes":[],"note":""},{"heading":"To find input x(n): X(z) = 1/(2z^-2 + 2z^-1 + 1)","kind":"code","pages":[63,63],"body":"clear; // To find input x(n)\n// X(z)=1/(2*z^(-2)+2*z^(-1)+1);\nclear;\nclc;\nclose;\nz=%z;\na=(2+2*z+z^2);\nb=z^2;\nh=ldiv(b,a,6);\ndisp(h,\"First six values of h(n):\");","changes":[],"note":""}],"note":""},{"id":"7","title":"System Response Using Z-Transform","aim":"","pages":[64,68],"parts":[{"heading":"To plot the response of the system analytically and using Scilab (impulse input)","kind":"code","pages":[65,65],"body":"// To plot the response of the system analytically and using scilab\nclear;\nclc;\nclose;\nn=0:1:20;\nx=[1 zeros(1,20)];\nb=[1 -0.5];\na=[1 -1 3/16];\nyanaly=0.5*(0.75).^n+0.5*(0.25).^n; // Analytical Solution.\nymat=filter(b,a,x);\nsubplot(3,1,1);\nplot2d3(n,x);\nxlabel('n');\nylabel('x(n)');\ntitle('INPUT SEQUENCE (IMPULSE FUNCTION)');\nsubplot(3,1,2);\nplot2d3(n,yanaly);\nxlabel('n');\nylabel('y(n)');\ntitle('OUTPUT SEQUENCE yanaly');","changes":[],"note":""},{"heading":"To plot the response of the system analytically and using Scilab (ramp input)","kind":"code","pages":[66,66],"body":"// To plot the response of the system analytically and using scilab.\nclear;\nclc;\nclose;\nn=0:1:20;\nx=n;\nb=[0 1 1];\na=[1 -0.7 0.12];\nyanaly=38.89*(0.4).^n-26.53*(0.3).^n-12.36+4.76*n; // Analytical Solution\nymat=filter(b,a,x);\nsubplot(3,1,1);\nplot2d3(n,x);\nxlabel('n');\nylabel('x(n)');\ntitle('INPUT SEQUENCE (RAMP FUNCTION)');\nsubplot(3,1,2);\nplot2d3(n,yanaly);\nxlabel('n');\nylabel('y(n)');\ntitle('Output SEQUENCE yanaly');\nsubplot(3,1,3);\nplot2d3(n,ymat);\nxlabel('n');\nylabel('y(n)');\ntitle('OUTPUT SEQUENCE ymat');","changes":[],"note":""},{"heading":"To plot the response of the system analytically and using Scilab (step input)","kind":"code","pages":[67,67],"body":"// To plot the response of the system analytically and using scilab\nclear;\nclc;\nclose;\nn=0:1:20;\nx=ones(1,length(n));\nb=[0 1];\na=[1 -1 -1];\nyanaly=0.447*(1.618).^n-0.447*(-0.618).^n; // Analytical Solution.\n[ymat,zf]=filter(b,a,x);\nsubplot(3,1,1);\nplot2d3(n,x);\nxlabel('n');\nylabel('x(n)');\ntitle('INPUT SEQUENCE (STEP FUNCTION)');\nsubplot(3,1,2);\nplot2d3(n,yanaly);\nxlabel('n');\nylabel('y(n)');\ntitle('OUTPUT SEQUENCE yanaly');\nsubplot(3,1,3);\nplot2d3(n,ymat,zf);\nxlabel('n');\nylabel('y(n)');\ntitle('OUTPUT SEQUENCE ymat');","changes":[],"note":""},{"heading":"To find input h(n): X(z) = (z+0.2)/((z+0.5)(z-1))","kind":"code","pages":[68,68],"body":"clear, // To find input h(n)\n// X(z)=(z+0.2)/((z+0.5)(z-1));\nclear;\nclc;\nclose;\nz=%z;\na=(z+0.5)*(z-1);\nb=z+0.2;\nh=ldiv(b,a,4);\ndisp(h,\"h(n)=\");","changes":[],"note":""}],"note":""},{"id":"8","title":"Pole-Zero Plot Using Z-Transform","aim":"","pages":[69,71],"parts":[{"heading":"To draw the pole-zero plot: H(z) = z(z+1)/(z^2-z+0.5)","kind":"code","pages":[70,70],"body":"// To draw the pole-zero plot\nclear;\nclc;\nclose;\nz=%z\nH1Z=((z)*(z+1))/(z^2-z+0.5);\nxset('window',1);\nplzr(H1Z);","changes":[],"note":""},{"heading":"To draw the pole-zero plot: H(z) = z/(z^2-z-1)","kind":"code","pages":[70,70],"body":"// To draw the pole-zero plot\nclear;\nclc;\nclose;\nz=%z\nH1Z=(z)/(z^2-z-1);\nxset('window',1);\nplzr(H1Z);","changes":[],"note":""},{"heading":"Pole-zero plot: H(z) = z(z-1)/((z-0.25)(z-0.5))","kind":"code","pages":[70,71],"body":"clear;\nclc;\nclose;\nz=%z\nH1Z=((z)*(z-1))/((z-0.25)*(z-0.5));\nxset('window',1);\nplzr(H1Z);","changes":[],"note":""},{"heading":"System transfer function, zeros and poles: H(z) = (1+z)/(1+3/4 z+1/8 z^2)","kind":"code","pages":[71,71],"body":"clear;\nclc;\nclose;\nz=poly(0,'z');\nH=(1+z)/(1+3/4*z+1/8*z^2);\npole=roots(1+z);\nzero=roots(1+3/4*z+1/8*z^2);\ndisp(H,'System Transfer Function H(z)=');\ndisp(zero,'System zeros are at');\ndisp(pole,'System poles are at');","changes":[],"note":""},{"heading":"Pole-Zero plots: h = 2z(z+1)/((z-1/3)(z^2+1/4)(z^2+4z+5))","kind":"code","pages":[71,71],"body":"clear;\nclc;\nclose;\n// Pole-Zero plots\nz=%z;\naz=2*z*(z+1);\nbz=(z-1/3)*((z^2)+1/4)*((z^2)+4*z+5);\npoles=roots(bz)\nzeroes=roots(az)\nh=az/bz\nplzr(h)","changes":[],"note":""}],"note":""}]</script>
+<script>
+(function () {
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("practicals-data").textContent);
+  var byId = {};
+  DATA.forEach(function (p) { byId[p.id] = p; });
+
+  var input = document.getElementById("pno");
+  var view = document.getElementById("view");
+  var chips = document.getElementById("chips");
+  var statusEl = document.getElementById("status");
+  var isHttp = /^https?:$/.test(location.protocol);
+  var BASE_TITLE = document.title;
+
+  /* ---------- helpers ---------- */
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function toId(s) {
+    var t = String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    return t.replace(/^(practical|pract|prac|pr|p)?(number|no)?/, "");
+  }
+  function label(id) { return id.toUpperCase(); }
+  function pagesText(pg) {
+    if (!pg || !pg.length) return "";
+    return pg[0] === pg[1] || pg.length === 1 ? "p. " + pg[0] : "pp. " + pg[0] + "–" + pg[1];
+  }
+  function codeParts(p) {
+    var code = p.parts.filter(function (x) { return x.kind === "code"; });
+    return code.length ? code : p.parts;
+  }
+  function allText(p) {
+    var parts = codeParts(p);
+    var isCode = parts[0] && parts[0].kind === "code";
+    return parts.map(function (x, i) {
+      var head = isCode
+        ? "// ---------- Practical " + label(p.id) + ", part " + (i + 1) + ": " + x.heading + " ----------"
+        : "---------- Practical " + label(p.id) + ", part " + (i + 1) + ": " + x.heading + " ----------";
+      return parts.length > 1 ? head + "\n" + x.body : x.body;
+    }).join("\n\n") + "\n";
+  }
+
+  /* ---------- tiny Scilab highlighter (display only; copy uses the raw text) ---------- */
+  var KW = { "function": 1, "endfunction": 1, "for": 1, "end": 1, "if": 1, "then": 1, "else": 1, "elseif": 1,
+             "while": 1, "do": 1, "select": 1, "case": 1, "return": 1, "break": 1, "continue": 1, "try": 1, "catch": 1 };
+  function hlLine(line) {
+    var out = "", i = 0, n = line.length, prev = "";
+    while (i < n) {
+      var c = line[i];
+      if (c === "/" && line[i + 1] === "/") { out += '<span class="cm">' + esc(line.slice(i)) + "</span>"; break; }
+      if (c === '"' || (c === "'" && !/[\w)\]}.'"]/.test(prev))) {
+        var j = i + 1;
+        while (j < n) {
+          if (line[j] === '"' || line[j] === "'") {
+            if (line[j + 1] === '"' || line[j + 1] === "'") { j += 2; continue; }
+            break;
+          }
+          j++;
+        }
+        out += '<span class="st">' + esc(line.slice(i, j + 1)) + "</span>";
+        prev = line[j] || ""; i = j + 1; continue;
+      }
+      if (/[A-Za-z_%]/.test(c)) {
+        var k = i + 1;
+        while (k < n && /\w/.test(line[k])) k++;
+        var w = line.slice(i, k);
+        if (KW[w] === 1) out += '<span class="kw">' + w + "</span>";
+        else if (w[0] === "%") out += '<span class="cn">' + esc(w) + "</span>";
+        else out += esc(w);
+        prev = line[k - 1]; i = k; continue;
+      }
+      out += esc(c); prev = c; i++;
+    }
+    return out;
+  }
+  function highlight(code) { return code.split("\n").map(hlLine).join("\n"); }
+
+  /* ---------- clipboard + download ---------- */
+  function copyText(text) {
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallback(); });
+    }
+    return Promise.resolve(fallback());
+  }
+  function flash(btn, ok) {
+    var orig = btn.getAttribute("data-label") || btn.textContent;
+    btn.setAttribute("data-label", orig);
+    btn.textContent = ok ? "Copied ✓" : "Select the text and copy";
+    btn.classList.toggle("copied", ok);
+    statusEl.textContent = ok ? "Copied to clipboard" : "Copy failed, select the code and copy it";
+    clearTimeout(btn._t);
+    btn._t = setTimeout(function () { btn.textContent = orig; btn.classList.remove("copied"); }, 1600);
+  }
+  function download(name, text) {
+    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+
+  /* ---------- routing: /ans/1a (via 404.html), /ans/?p=1a, /ans/#1a ---------- */
+  function parseLocation() {
+    var path = location.pathname, base = path, route = "";
+    var segs = path.split("/").filter(Boolean);
+    if (/\/$/.test(path)) {
+      var last = segs[segs.length - 1] || "";
+      if (byId[toId(decodeURIComponent(last))]) {
+        route = decodeURIComponent(last);
+        base = "/" + segs.slice(0, -1).join("/") + (segs.length > 1 ? "/" : "");
+      }
+    } else {
+      var cut = path.lastIndexOf("/");
+      base = path.slice(0, cut + 1);
+      var tail = decodeURIComponent(path.slice(cut + 1));
+      if (!/\.html?$/i.test(tail)) route = tail;
+    }
+    var q = new URLSearchParams(location.search);
+    var fromQuery = q.get("p") || q.get("q") || "";
+    if (!fromQuery && location.search.length > 1 && location.search.indexOf("=") < 0) {
+      fromQuery = decodeURIComponent(location.search.slice(1));
+    }
+    var fromHash = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
+    if (/^part-\d+$/.test(fromHash)) fromHash = "";
+    return { base: base, route: fromHash || fromQuery || route };
+  }
+  var LOC = parseLocation();
+  var BASE = LOC.base;
+
+  function hrefFor(id) { return isHttp ? BASE + id : "#" + id; }
+  function setUrl(id, push) {
+    var url = id ? hrefFor(id) : (isHttp ? BASE : location.pathname + location.search);
+    var now = isHttp ? location.pathname + location.search + location.hash : location.hash;
+    if (!isHttp && !id && !location.hash) return;
+    if (now === url) return;
+    try { history[push ? "pushState" : "replaceState"]({ id: id || "" }, "", url); } catch (e) { /* file:// quirks */ }
+  }
+
+  /* ---------- views ---------- */
+  function renderChips(currentId) {
+    chips.innerHTML = DATA.map(function (p) {
+      return '<li><a href="' + esc(hrefFor(p.id)) + '" data-id="' + p.id + '"' +
+        (p.id === currentId ? ' aria-current="page"' : "") + ">" + label(p.id) + "</a></li>";
+    }).join("");
+    chips.hidden = !currentId;
+  }
+
+  function renderIndex(list, message) {
+    renderChips("");
+    document.title = BASE_TITLE;
+    var rows = list.map(function (p) {
+      return '<li><a href="' + esc(hrefFor(p.id)) + '" data-id="' + p.id + '">' +
+        '<span class="no">' + label(p.id) + '</span><span class="t">' + esc(p.title) + "</span>" +
+        '<span class="pg">' + pagesText(p.pages) + "</span></a></li>";
+    }).join("");
+    view.innerHTML = '<p class="msg">' + message + "</p>" + (rows ? '<ul class="index">' + rows + "</ul>" : "");
+  }
+
+  function renderPractical(p) {
+    renderChips(p.id);
+    document.title = label(p.id) + " – " + p.title;
+    var hasCode = p.parts.some(function (x) { return x.kind === "code"; });
+    var n = p.parts.length;
+    var html = '<article class="prac">' +
+      '<header class="prac-head"><h1><span class="id">' + label(p.id) + "</span>" + esc(p.title) + "</h1>" +
+      (p.aim && p.aim !== p.title ? '<p class="aim">Aim: ' + esc(p.aim) + "</p>" : "") +
+      '<p class="meta">' + n + (n === 1 ? " part" : " parts") + ", journal " + pagesText(p.pages) +
+      (hasCode ? "" : ". Worked by hand in the journal, no Scilab code") + "</p>" +
+      '<div class="actions">' +
+        '<button class="btn primary" type="button" data-act="copy-all">' + (n > 1 ? "Copy all parts" : "Copy") + "</button>" +
+        '<button class="btn" type="button" data-act="download">Download ' + (hasCode ? ".sce" : ".txt") + "</button>" +
+      "</div>" +
+      (n > 2 ? '<ol class="toc" aria-label="Parts">' + p.parts.map(function (x, i) {
+        return '<li><a href="#part-' + (i + 1) + '" data-part-link="' + (i + 1) + '"><span class="part-no">' + (i + 1) + "</span>" + esc(x.heading) + "</a></li>";
+      }).join("") + "</ol>" : "") +
+      "</header>" +
+      '<div class="sheet">';
+    p.parts.forEach(function (x, i) {
+      var lines = x.body.split("\n").length;
+      var gutter = "";
+      for (var l = 1; l <= lines; l++) gutter += l + (l < lines ? "\n" : "");
+      html += '<section class="part" id="part-' + (i + 1) + '">' +
+        '<div class="part-head"><span class="part-no" aria-hidden="true">' + (i + 1) + "</span>" +
+        "<h2>" + esc(x.heading) + (x.pages && x.pages.length ? '<span class="pg">' + pagesText(x.pages) + "</span>" : "") + "</h2>" +
+        '<button class="btn" type="button" data-act="copy" data-part="' + i + '">Copy</button></div>';
+      if (x.kind === "code") {
+        html += '<div class="code-wrap"><pre class="gutter" aria-hidden="true">' + gutter + "</pre>" +
+          '<pre class="code" tabindex="0" aria-label="Code for ' + esc(x.heading) + '"><code>' + highlight(x.body) + "</code></pre></div>";
+      } else {
+        html += '<div class="code-wrap textual"><span></span><pre class="text">' + esc(x.body) + "</pre></div>";
+      }
+      if (x.changes && x.changes.length) {
+        html += '<div class="fix">Corrected from the journal:<ul>' + x.changes.map(function (c) {
+          return "<li>" + esc(c).replace(/`([^`]+)`/g, "<code>$1</code>") + "</li>";
+        }).join("") + "</ul></div>";
+      }
+      if (x.note) {
+        html += '<p class="pnote">' + esc(x.note).replace(/`([^`]+)`/g, "<code>$1</code>") + "</p>";
+      }
+      html += "</section>";
+    });
+    html += "</div>";
+    if (p.note) html += '<p class="note">' + esc(p.note) + "</p>";
+    html += "</article>";
+    view.innerHTML = html;
+    view.setAttribute("data-id", p.id);
+  }
+
+  function show(raw, opts) {
+    opts = opts || {};
+    var id = toId(raw);
+    var text = String(raw || "").trim();
+    if (byId[id]) {
+      renderPractical(byId[id]);
+      setUrl(id, opts.push);
+      statusEl.textContent = "Showing practical " + label(id);
+      return;
+    }
+    view.removeAttribute("data-id");
+    if (!text) {
+      renderIndex(DATA, "All practicals in the journal. Pick one, or type its number above.");
+      setUrl("", opts.push);
+      return;
+    }
+    var q = text.toLowerCase();
+    var list = DATA.filter(function (p) {
+      var hay = (p.title + " " + (p.aim || "") + " " + p.parts.map(function (x) { return x.heading; }).join(" ")).toLowerCase();
+      return (id && p.id.indexOf(id) === 0) || (q.length >= 3 && hay.indexOf(q) >= 0);
+    });
+    if (list.length) {
+      renderIndex(list, list.length === 1 ? "1 match. Press Enter to open it." : list.length + " matches. Press Enter to open the first one.");
+    } else {
+      renderIndex(DATA, "There is no practical “" + esc(text) + "” in the journal. These are the ones it has:");
+    }
+    statusEl.textContent = list.length ? list.length + " matching practicals" : "No match";
+  }
+
+  /* ---------- events ---------- */
+  input.addEventListener("input", function () { show(input.value); });
+  document.getElementById("lookup").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var first = view.querySelector(".index a[data-id]");
+    if (!view.getAttribute("data-id") && first) {
+      input.value = label(first.getAttribute("data-id"));
+      show(input.value, { push: true });
+    }
+    var firstBtn = view.querySelector(".actions .btn");
+    if (firstBtn && view.getAttribute("data-id")) input.blur();
+  });
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { input.value = ""; show(""); }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "/" && document.activeElement !== input && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault(); input.focus(); input.select();
+    }
+  });
+  document.addEventListener("click", function (e) {
+    var jump = e.target.closest && e.target.closest("a[data-part-link]");
+    if (jump) {
+      e.preventDefault();
+      var sec = document.getElementById("part-" + jump.getAttribute("data-part-link"));
+      if (sec) {
+        sec.scrollIntoView({ block: "start" });
+        var b = sec.querySelector("button");
+        if (b) b.focus({ preventScroll: true });
+      }
+      return;
+    }
+    var link = e.target.closest && e.target.closest("a[data-id]");
+    if (link && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+      e.preventDefault();
+      input.value = label(link.getAttribute("data-id"));
+      show(input.value, { push: true });
+      window.scrollTo(0, 0);
+      return;
+    }
+    var btn = e.target.closest && e.target.closest("button[data-act]");
+    if (!btn) return;
+    var p = byId[view.getAttribute("data-id")];
+    if (!p) return;
+    var act = btn.getAttribute("data-act");
+    if (act === "copy") {
+      copyText(p.parts[+btn.getAttribute("data-part")].body + "\n").then(function (ok) { flash(btn, ok); });
+    } else if (act === "copy-all") {
+      copyText(allText(p)).then(function (ok) { flash(btn, ok); });
+    } else if (act === "download") {
+      var hasCode = p.parts.some(function (x) { return x.kind === "code"; });
+      download("practical-" + p.id + (hasCode ? ".sce" : ".txt"), allText(p));
+    }
+  });
+  window.addEventListener("popstate", function () {
+    var r = parseLocation().route;
+    input.value = byId[toId(r)] ? label(toId(r)) : r;
+    show(r);
+  });
+
+  /* ---------- start ---------- */
+  if (LOC.route) {
+    var startId = toId(LOC.route);
+    input.value = byId[startId] ? label(startId) : LOC.route;
+    show(LOC.route);
+  } else {
+    show("");
+    if (window.matchMedia && window.matchMedia("(pointer: fine)").matches) input.focus();
+  }
+})();
+</script>
+</body>
+</html>
